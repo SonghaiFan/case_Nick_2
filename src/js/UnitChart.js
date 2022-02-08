@@ -1,9 +1,9 @@
 export default function UnitChart() {
   // CANVAS SETUP
   let margin = {
-      top: 0,
+      top: 10,
       right: 0,
-      bottom: 0,
+      bottom: 10,
       left: 0,
     },
     dim_color,
@@ -23,8 +23,8 @@ export default function UnitChart() {
           g_y_id: (d) => op.floor(d.g_id / bin),
         });
 
-      const data = table.groupby("id").objects({ grouped: "entries" });
-
+      // const data = table.groupby("id").objects({ grouped: "entries" });
+      const data = table.objects();
       console.log(data);
 
       const container = d3.select(this);
@@ -82,17 +82,18 @@ export default function UnitChart() {
 
       const sizeValue = Math.min(xScale.bandwidth(), yScale.bandwidth());
 
-      const OEg = fl1
-        .selectAll("g")
-        .data(data, (d) => d[0])
-        .join("g")
-        .attr("class", (d) => `OEg_${d[0]}`);
+      // const OEg = fl1
+      //   .selectAll("g")
+      //   .data(data, (d) => d[0])
+      //   .join("g")
+      //   .attr("class", (d) => `OEg_${d[0]}`);
 
-      const OE = OEg.selectAll("rect").data(
-        (d) => d[1],
-        (d) => d.id
-      );
+      // const OE = OEg.selectAll("rect").data(
+      //   (d) => d[1],
+      //   (d) => d.id
+      // );
 
+      const OE = fl1.selectAll("rect").data(data, (d) => d.id);
       OE.join(
         function (enter) {
           const rectEner = enter
@@ -118,7 +119,7 @@ export default function UnitChart() {
             .transition()
             .duration(1000)
             .style("opacity", 1)
-            .delay((d, i) => i * 5)
+            .delay((d, i) => i)
             .attr("height", sizeValue)
             .attr("width", sizeValue)
             .attr("x", (d) => xValue(d))
@@ -128,10 +129,9 @@ export default function UnitChart() {
         function (exit) {
           const rectExitTransition = exit
             .transition()
-            .style("opacity", 0.2)
-            .transition()
+            .duration(750)
             .ease(d3.easeExp)
-            .attr("y", (d) => -2 * height)
+            .attr("y", (d) => -height)
             .remove();
 
           return rectExitTransition;

@@ -15,9 +15,9 @@ const scroller = scrollama();
 // load the data
 
 // const aqData = await aq.loadCSV("src/data/demo.csv");
-const aqData = await aq.loadCSV("src/data/article_data.csv");
+const articleData = await aq.loadCSV("src/data/article_data.csv");
 
-console.log(aqData);
+console.log(articleData);
 
 // preparation for rendering
 
@@ -28,24 +28,28 @@ const UnitChartInstance1 = UnitChart();
 //   .measure_y("sales")
 //   .color_domain(aqData.array("country"));
 
+const dumyData = aq.table({
+  id: d3.range(3844),
+});
+
 function stepTrigger(index) {
   switch (index) {
     case 0:
       break;
     case 1:
-      fig1.datum(aqData.slice(0, 0)).call(UnitChartInstance1);
+      fig1.datum(dumyData.slice(0, 0)).call(UnitChartInstance1);
       break;
     case 2:
-      fig1.datum(aqData.slice(0, 1)).call(UnitChartInstance1);
+      fig1.datum(dumyData).call(UnitChartInstance1);
       break;
     case 3:
-      fig1.datum(aqData.slice(0, 8)).call(UnitChartInstance1);
+      fig1.datum(dumyData.slice(0, 1000).sample(1000)).call(UnitChartInstance1);
       break;
     case 4:
-      fig1.datum(aqData.sample(12)).call(UnitChartInstance1);
+      fig1.datum(dumyData.slice(0, 588)).call(UnitChartInstance1);
       break;
     case 5:
-      fig1.datum(aqData).call(UnitChartInstance1);
+      fig1.datum(articleData.slice(0, 267)).call(UnitChartInstance1);
       break;
     case 6:
       // fig2.datum(aqData).call(HorizontalBarchart_1.dim_x("country").dim(null));
