@@ -17,8 +17,6 @@ const scroller = scrollama();
 // const aqData = await aq.loadCSV("src/data/demo.csv");
 const articleData = await aq.loadCSV("src/data/article_data.csv");
 
-console.log(articleData);
-
 // preparation for rendering
 
 const UnitChartInstance1 = UnitChart();
@@ -52,12 +50,26 @@ function stepTrigger(index) {
       fig1.datum(articleData.slice(0, 267)).call(UnitChartInstance1);
       break;
     case 6:
-      // fig2.datum(aqData).call(HorizontalBarchart_1.dim_x("country").dim(null));
+      fig1.datum(articleData.slice(0, 1)).call(UnitChartInstance1);
       break;
     case 7:
-      // fig2
-      //   .datum(aqData)
-      //   .call(HorizontalBarchart_1.dim_x("country").dim("brand").smooth(false));
+      // const article_data1 = articleData.slice(0, 1).object();
+      // const article_rect1 = fig1.select("#article_rect_1");
+      // if (!article_rect1.empty()) {
+      //   console.log(article_rect1.attr("y"));
+      //   d3.select("#fig1")
+      //     .select("svg")
+      //     .selectAll("foreignObject")
+      //     .data([null])
+      //     .join("foreignObject")
+      //     .attr("height", article_rect1.attr("height"))
+      //     .attr("width", article_rect1.attr("height"))
+      //     .attr("x", article_rect1.attr("x"))
+      //     .attr("y", article_rect1.attr("y"))
+      //     .append("xhtml:div")
+      //     .text(article_data1.text);
+      // }
+
       break;
     case 8:
       // fig2
@@ -147,6 +159,10 @@ function initialCanvas() {
   const defaultLayters = [
     "morphLayer",
     "figureLayer",
+    "figureLayer1",
+    "figureLayer2",
+    "figureLayer3",
+    "figureLayer4",
     "xAxisLayer",
     "yAxisLayer",
     "anotationLayer",

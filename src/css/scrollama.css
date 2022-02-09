@@ -68,7 +68,7 @@ figure {
   transform: translate3d(0, 0, 0);
   z-index: 0;
   border: 1px solid #101010;
-  /* shape-rendering: optimizeSpeed; */
+  shape-rendering: optimizeSpeed;
   /* display: flex;
   flex-wrap: wrap;
   flex-direction: row; */
@@ -93,7 +93,7 @@ figure svg {
 }
 
 figure div {
-  overflow: auto;
+  overflow: scroll;
   height: 100%;
 }
 

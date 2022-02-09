@@ -23,9 +23,8 @@ export default function UnitChart() {
           g_y_id: (d) => op.floor(d.g_id / bin),
         });
 
-      // const data = table.groupby("id").objects({ grouped: "entries" });
       const data = table.objects();
-      console.log(data);
+      // console.log(data);
 
       const container = d3.select(this);
 
@@ -36,10 +35,9 @@ export default function UnitChart() {
       const innerWidth = width - margin.left - margin.right,
         innerHeight = height - margin.top - margin.bottom;
 
-      const fl1 = container.select(".figureLayer");
+      const fl = container.select(".figureLayer");
 
-      fl1
-        .transition()
+      fl.transition()
         .duration(750)
         .style("opacity", 1)
         .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -82,22 +80,13 @@ export default function UnitChart() {
 
       const sizeValue = Math.min(xScale.bandwidth(), yScale.bandwidth());
 
-      // const OEg = fl1
-      //   .selectAll("g")
-      //   .data(data, (d) => d[0])
-      //   .join("g")
-      //   .attr("class", (d) => `OEg_${d[0]}`);
+      const OE = fl.selectAll("rect").data(data, (d) => d.id);
 
-      // const OE = OEg.selectAll("rect").data(
-      //   (d) => d[1],
-      //   (d) => d.id
-      // );
-
-      const OE = fl1.selectAll("rect").data(data, (d) => d.id);
       OE.join(
         function (enter) {
           const rectEner = enter
             .append("rect")
+            .attr("id", (d) => `article_rect_${d.id}`)
             .attr("stroke", dim_color || "white")
             .style("mix-blend-mode", "multiply")
             .attr("fill", (d) => (dim_color ? colorScale(colorValue(d)) : null))
@@ -124,6 +113,7 @@ export default function UnitChart() {
             .attr("width", sizeValue)
             .attr("x", (d) => xValue(d))
             .attr("y", (d) => yValue(d));
+
           return rectUpdateTransition;
         },
         function (exit) {
@@ -137,6 +127,26 @@ export default function UnitChart() {
           return rectExitTransition;
         }
       );
+      fl.selectAll("foreignObject").transition().style("opacity", 0).remove();
+
+      if (data.length == 1) {
+        fl.selectAll("foreignObject")
+          .data(data)
+          .join("foreignObject")
+          .attr("height", sizeValue)
+          .attr("width", sizeValue)
+          .attr("x", (d) => xValue(d))
+          .attr("y", (d) => yValue(d))
+          .style("opacity", 0)
+          .append("xhtml:div")
+          .text((d) => d.text);
+
+        fl.selectAll("foreignObject")
+          .transition()
+          .duration(750)
+          .delay(1000)
+          .style("opacity", 1);
+      }
     });
   }
 
