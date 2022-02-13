@@ -1,7 +1,7 @@
 import UnitChart from "./UnitChart.js";
-import { HorizontalBarchart } from "./Barchart.js";
+import GridLayout from "./GridLayout.js";
 
-const figures = d3.selectAll("figure");
+const figures = d3.selectAll(".figure");
 const fig1 = d3.select("#fig1");
 const fig2 = d3.select("#fig2");
 const fig3 = d3.select("#fig3");
@@ -19,7 +19,7 @@ const articleData = await aq.loadCSV("src/data/article_data.csv");
 
 // preparation for rendering
 
-const UnitChartInstance1 = UnitChart();
+const UnitGridLayout = GridLayout();
 
 // const HorizontalBarchart_1 = HorizontalBarchart()
 //   .dim_color("country")
@@ -27,7 +27,7 @@ const UnitChartInstance1 = UnitChart();
 //   .color_domain(aqData.array("country"));
 
 const dumyData = aq.table({
-  id: d3.range(3844),
+  id: d3.range(300),
 });
 
 function stepTrigger(index) {
@@ -35,53 +35,32 @@ function stepTrigger(index) {
     case 0:
       break;
     case 1:
-      fig1.datum(dumyData.slice(0, 0)).call(UnitChartInstance1);
+      fig1.datum(dumyData.slice(0, 0)).call(UnitGridLayout);
       break;
     case 2:
-      fig1.datum(dumyData).call(UnitChartInstance1);
+      fig1.datum(dumyData).call(UnitGridLayout);
       break;
     case 3:
-      fig1.datum(dumyData.slice(0, 1000).sample(1000)).call(UnitChartInstance1);
+      fig1.datum(dumyData.slice(0, 100).sample(100)).call(UnitGridLayout);
       break;
     case 4:
-      fig1.datum(dumyData.slice(0, 588)).call(UnitChartInstance1);
+      fig1.datum(dumyData.slice(0, 300)).call(UnitGridLayout);
       break;
     case 5:
-      fig1.datum(articleData.slice(0, 267)).call(UnitChartInstance1);
+      fig1.datum(dumyData.slice(0, 1)).call(UnitGridLayout);
       break;
     case 6:
-      fig1.datum(articleData.slice(0, 1)).call(UnitChartInstance1);
+      fig1.datum(dumyData.slice(0, 2)).call(UnitGridLayout);
       break;
     case 7:
-      // const article_data1 = articleData.slice(0, 1).object();
-      // const article_rect1 = fig1.select("#article_rect_1");
-      // if (!article_rect1.empty()) {
-      //   console.log(article_rect1.attr("y"));
-      //   d3.select("#fig1")
-      //     .select("svg")
-      //     .selectAll("foreignObject")
-      //     .data([null])
-      //     .join("foreignObject")
-      //     .attr("height", article_rect1.attr("height"))
-      //     .attr("width", article_rect1.attr("height"))
-      //     .attr("x", article_rect1.attr("x"))
-      //     .attr("y", article_rect1.attr("y"))
-      //     .append("xhtml:div")
-      //     .text(article_data1.text);
-      // }
-
+      fig1.datum(dumyData.slice(0, 4)).call(UnitGridLayout);
       break;
     case 8:
-      // fig2
-      //   .datum(aqData)
-      //   .call(HorizontalBarchart_1.dim_x("brand").dim("country"));
+      fig1.datum(dumyData.slice(0, 5)).call(UnitGridLayout);
       break;
     case 9:
-      // granularity change
-      // fig2.datum(aqData).call(HorizontalBarchart_1.dim_x("brand").dim("year"));
       break;
     case 10:
-      // fig2.datum(aqData).call(HorizontalBarchart_1.dim_x("year").dim("brand"));
       break;
     case 11:
       // fig3.datum(aqData).call();

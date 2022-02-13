@@ -89,7 +89,6 @@ export default function UnitChart() {
             .attr("id", (d) => `article_rect_${d.id}`)
             .attr("stroke", dim_color || "white")
             .style("mix-blend-mode", "multiply")
-            .attr("fill", (d) => (dim_color ? colorScale(colorValue(d)) : null))
             .attr("x", (d) => xValue(d))
             .attr("y", (d) => -2 * height)
             .attr("width", sizeValue);
@@ -127,26 +126,6 @@ export default function UnitChart() {
           return rectExitTransition;
         }
       );
-      fl.selectAll("foreignObject").transition().style("opacity", 0).remove();
-
-      if (data.length == 1) {
-        fl.selectAll("foreignObject")
-          .data(data)
-          .join("foreignObject")
-          .attr("height", sizeValue)
-          .attr("width", sizeValue)
-          .attr("x", (d) => xValue(d))
-          .attr("y", (d) => yValue(d))
-          .style("opacity", 0)
-          .append("xhtml:div")
-          .text((d) => d.text);
-
-        fl.selectAll("foreignObject")
-          .transition()
-          .duration(750)
-          .delay(1000)
-          .style("opacity", 1);
-      }
     });
   }
 
