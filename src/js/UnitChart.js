@@ -8,8 +8,10 @@ export default function UnitChart() {
     },
     dim_color,
     color_domain,
+    color_range,
     pad = 0.1,
-    bin;
+    bin,
+    details = false;
 
   function chart(selection) {
     selection.each(function (aqData, i, g) {
@@ -35,9 +37,15 @@ export default function UnitChart() {
       const innerWidth = width - margin.left - margin.right,
         innerHeight = height - margin.top - margin.bottom;
 
-      const fl = container.select(".figureLayer");
+      const fl = container.select(".figureLayer"),
+        al = container.select(".anotationLayer");
 
       fl.transition()
+        .duration(750)
+        .style("opacity", 1)
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+
+      al.transition()
         .duration(750)
         .style("opacity", 1)
         .attr("transform", `translate(${margin.left},${margin.top})`);
@@ -56,17 +64,8 @@ export default function UnitChart() {
 
       const colorScale = d3
         .scaleOrdinal()
-        .domain(
-          color_domain || dim_color ? table.array(dim_color) : table.array("id")
-        )
-        .range([
-          "#fa4d1d",
-          "#fcdb39",
-          "#1c6ae4",
-          "#03b976",
-          "#fac3d3",
-          "#fffaf0",
-        ]);
+        .domain(color_domain || dim_color)
+        .range(color_range || d3.schemeTableau10);
 
       const xValue = (d) =>
         xScale.bandwidth() > yScale.bandwidth()
@@ -81,6 +80,8 @@ export default function UnitChart() {
       const sizeValue = Math.min(xScale.bandwidth(), yScale.bandwidth());
 
       const OE = fl.selectAll("rect").data(data, (d) => d.id);
+
+      let promiseQueue = [];
 
       OE.join(
         function (enter) {
@@ -101,6 +102,8 @@ export default function UnitChart() {
             .attr("y", (d) => yValue(d))
             .attr("height", sizeValue);
 
+          promiseQueue.push(rectEnterTransition.end());
+
           return rectEnterTransition;
         },
         function (update) {
@@ -113,6 +116,7 @@ export default function UnitChart() {
             .attr("width", sizeValue)
             .attr("x", (d) => xValue(d))
             .attr("y", (d) => yValue(d));
+          promiseQueue.push(rectUpdateTransition.end());
 
           return rectUpdateTransition;
         },
@@ -123,29 +127,90 @@ export default function UnitChart() {
             .ease(d3.easeExp)
             .attr("y", (d) => -height)
             .remove();
-
+          promiseQueue.push(rectExitTransition.end());
           return rectExitTransition;
         }
       );
+
       fl.selectAll("foreignObject").transition().style("opacity", 0).remove();
 
-      if (data.length == 1) {
-        fl.selectAll("foreignObject")
-          .data(data)
+      function showDetails() {
+        console.log("show details");
+        const lableText = (text) =>
+          text
+            .replace(
+              /indigenous/g,
+              '<span key="firstnations">indigenous</span>'
+            )
+            .replace(
+              /migrant/g,
+              '<span key="migrantsandrefugees">migrant</span>'
+            )
+            .replace(/women/g, '<span key="women">women</span>')
+            .replace(/domestic/g, '<span key="familyrelations">domestic</span>')
+            .replace(/violence/g, '<span key="violence">violence</span>');
+
+        const istd = fl
+          .selectAll("foreignObject")
+          .data(data, (d) => d.id)
           .join("foreignObject")
           .attr("height", sizeValue)
           .attr("width", sizeValue)
           .attr("x", (d) => xValue(d))
           .attr("y", (d) => yValue(d))
-          .style("opacity", 0)
           .append("xhtml:div")
-          .text((d) => d.text);
+          .attr("id", "in_svg_text_div")
+          .style("opacity", 0)
+          .html(
+            (d) =>
+              `<g><strong>${d.heading}</strong><br><br>${lableText(d.text)}</g>`
+          );
 
-        fl.selectAll("foreignObject")
-          .transition()
-          .duration(750)
-          .delay(1000)
-          .style("opacity", 1);
+        istd.transition().style("opacity", 1);
+
+        istd.selectAll("span").style("background-color", function () {
+          return colorScale(d3.select(this).attr("key"));
+        });
+
+        const keys = [
+          "firstnations",
+          "migrantsandrefugees",
+          "women",
+          "familyrelations",
+          "violence",
+        ];
+
+        const size = 20;
+
+        al.selectAll("rect")
+          .data(keys)
+          .enter()
+          .append("rect")
+          .attr("x", width * 0.8)
+          .attr("y", (d, i) => height * 0.3 + i * (size + 5))
+          .attr("width", size)
+          .attr("height", size)
+          .style("fill", function (d) {
+            return colorScale(d);
+          });
+
+        // Add one dot in the legend for each name.
+        al.selectAll("text")
+          .data(keys)
+          .enter()
+          .append("text")
+          .attr("x", width * 0.8 + size * 1.2)
+          .attr("y", (d, i) => height * 0.3 + i * (size + 5) + size / 2)
+          .style("fill", "white")
+          .text(function (d) {
+            return d;
+          })
+          .attr("text-anchor", "left")
+          .attr("dy", "0.25em");
+      }
+
+      if (details) {
+        Promise.all(promiseQueue).then(showDetails);
       }
     });
   }
@@ -181,6 +246,12 @@ export default function UnitChart() {
     return chart;
   };
 
+  chart.color_range = function (_) {
+    if (!arguments.length) return color_range;
+    color_range = _;
+    return chart;
+  };
+
   chart.pad = function (_) {
     if (!arguments.length) return pad;
     pad = _;
@@ -190,6 +261,12 @@ export default function UnitChart() {
   chart.bin = function (_) {
     if (!arguments.length) return bin;
     bin = _;
+    return chart;
+  };
+
+  chart.details = function (_) {
+    if (!arguments.length) return details;
+    details = _;
     return chart;
   };
 

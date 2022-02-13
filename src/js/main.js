@@ -1,7 +1,8 @@
 import UnitChart from "./UnitChart.js";
+import UnitChartKey from "./UnitChartKey.js";
 import { HorizontalBarchart } from "./Barchart.js";
 
-const figures = d3.selectAll("figure");
+const figures = d3.selectAll(".figure");
 const fig1 = d3.select("#fig1");
 const fig2 = d3.select("#fig2");
 const fig3 = d3.select("#fig3");
@@ -16,10 +17,39 @@ const scroller = scrollama();
 
 // const aqData = await aq.loadCSV("src/data/demo.csv");
 const articleData = await aq.loadCSV("src/data/article_data.csv");
-
+const hierarchyData = await aq.loadCSV("src/data/hierarchy_data.csv");
 // preparation for rendering
 
-const UnitChartInstance1 = UnitChart();
+const colorData = hierarchyData
+  .groupby(["group_or_issue", "key"])
+  .rollup({ count: (d) => op.count() })
+  .orderby(["group_or_issue", aq.desc("count")])
+  .groupby("group_or_issue")
+  .derive({ rolling_count: aq.rolling((d) => op.sum(d.count)) })
+  .derive({ percent: (d) => d.rolling_count / op.sum(d.count) || 0 })
+  .derive({
+    color: aq.escape((d) =>
+      d.group_or_issue == "group"
+        ? d3.interpolateCool(d.percent)
+        : d3.interpolateWarm(d.percent)
+    ),
+  });
+
+const hierarchyLinkage = hierarchyData
+  .derive({ index: (d) => op.row_number() - 1 })
+  .groupby("id")
+  .rollup({
+    count: (d) => op.count(),
+    rows: (d) => op.array_agg("index"),
+  });
+
+const UnitChartInstance1 = UnitChart()
+  .color_domain(colorData.array("key"))
+  .color_range(colorData.array("color"));
+
+const UnitChartKeyInstance1 = UnitChartKey()
+  .color_domain(colorData.array("key"))
+  .color_range(colorData.array("color"));
 
 // const HorizontalBarchart_1 = HorizontalBarchart()
 //   .dim_color("country")
@@ -27,7 +57,7 @@ const UnitChartInstance1 = UnitChart();
 //   .color_domain(aqData.array("country"));
 
 const dumyData = aq.table({
-  id: d3.range(3844),
+  id: d3.range(3845),
 });
 
 function stepTrigger(index) {
@@ -35,46 +65,37 @@ function stepTrigger(index) {
     case 0:
       break;
     case 1:
-      fig1.datum(dumyData.slice(0, 0)).call(UnitChartInstance1);
+      fig1
+        .datum(articleData.slice(0, 0))
+        .call(UnitChartInstance1.details(false));
       break;
     case 2:
-      fig1.datum(dumyData).call(UnitChartInstance1);
-      break;
-    case 3:
-      fig1.datum(dumyData.slice(0, 1000).sample(1000)).call(UnitChartInstance1);
-      break;
-    case 4:
-      fig1.datum(dumyData.slice(0, 588)).call(UnitChartInstance1);
-      break;
-    case 5:
-      fig1.datum(articleData.slice(0, 267)).call(UnitChartInstance1);
-      break;
-    case 6:
       fig1.datum(articleData.slice(0, 1)).call(UnitChartInstance1);
       break;
+    case 3:
+      fig1.datum(dumyData).call(UnitChartInstance1);
+      break;
+    case 4:
+      fig1.datum(dumyData.slice(0, 1000).sample(1000)).call(UnitChartInstance1);
+      break;
+    case 5:
+      fig1.datum(dumyData.slice(0, 588)).call(UnitChartInstance1);
+      break;
+    case 6:
+      fig1.datum(articleData).call(UnitChartInstance1.details(false));
+      break;
     case 7:
-      // const article_data1 = articleData.slice(0, 1).object();
-      // const article_rect1 = fig1.select("#article_rect_1");
-      // if (!article_rect1.empty()) {
-      //   console.log(article_rect1.attr("y"));
-      //   d3.select("#fig1")
-      //     .select("svg")
-      //     .selectAll("foreignObject")
-      //     .data([null])
-      //     .join("foreignObject")
-      //     .attr("height", article_rect1.attr("height"))
-      //     .attr("width", article_rect1.attr("height"))
-      //     .attr("x", article_rect1.attr("x"))
-      //     .attr("y", article_rect1.attr("y"))
-      //     .append("xhtml:div")
-      //     .text(article_data1.text);
-      // }
-
+      fig1
+        .datum(articleData.slice(0, 1))
+        .call(UnitChartInstance1.details(true));
       break;
     case 8:
-      // fig2
-      //   .datum(aqData)
-      //   .call(HorizontalBarchart_1.dim_x("brand").dim("country"));
+      fig1
+        .datum(articleData.slice(0, 1))
+        .call(UnitChartInstance1.details(false));
+      fig1
+        .datum(articleData.slice(0, 2))
+        .call(UnitChartKeyInstance1.details(false));
       break;
     case 9:
       // granularity change
@@ -136,6 +157,12 @@ function handleStepEnter({ element, direction, index }) {
     .classed("is-active", false);
   d3.select(`#scrollama_step_tag_${index}`).classed("is-active", true);
 
+  d3.select(".anotationLayer")
+    .selectAll("*")
+    .transition()
+    .style("opacity", 0)
+    .remove();
+
   stepTrigger(index);
 }
 
@@ -166,7 +193,7 @@ function initialCanvas() {
     "xAxisLayer",
     "yAxisLayer",
     "anotationLayer",
-  ];
+  ].reverse();
 
   figures
     .append("svg")
