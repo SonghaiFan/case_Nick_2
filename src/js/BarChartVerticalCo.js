@@ -1,4 +1,4 @@
-export default function BarChartVertical() {
+export default function BarChartVerticalCo() {
   // CANVAS SETUP
   let margin = {
       top: 0.1,
@@ -11,7 +11,7 @@ export default function BarChartVertical() {
     color_range,
     pad = 0.1,
     bin,
-    smooth = false;
+    smooth = true;
 
   function chart(selection) {
     selection.each(function (aqData) {
@@ -38,14 +38,34 @@ export default function BarChartVertical() {
 
       const groupKey = "key";
 
-      const aqDataSum = aqData
-        .groupby(groupKey)
-        .rollup({ value_sum: (d) => op.sum(d.value) })
-        .orderby("value_sum");
+      const aqData_g = aqData
+        .filter((d) => d.group_or_issue == "group")
+        .select("id", "key", "value");
 
-      const data = aqDataSum.objects();
+      const aqData_i = aqData
+        .filter((d) => d.group_or_issue == "issue")
+        .select("id", "key", "value");
 
-      const data2 = aqDataSum.groupby(groupKey).objects({ grouped: "entries" });
+      const aqData_gi = aqData_g
+        .join(aqData_i, ["id", "id"])
+        .select("id", "key_1", "key_2", "value_1");
+
+      const aqData_gi_g = aqData_gi
+        .groupby("key_1")
+        .rollup({ value_sum: (d) => op.sum(d.value_1) })
+        .rename({ key_1: "key" });
+      const aqData_gi_i = aqData_gi
+        .groupby("key_2")
+        .rollup({ value_sum: (d) => op.sum(d.value_1) })
+        .rename({ key_2: "key" });
+
+      const aqDataCo = aqData_gi_g.concat(aqData_gi_i).orderby("value_sum");
+
+      const data = aqDataCo.objects();
+
+      const keyArray = Array.from(new Set(data.map((d) => d[groupKey])));
+
+      const data2 = aqDataCo.groupby(groupKey).objects({ grouped: "entries" });
 
       const xScale = d3
         .scaleLinear()
@@ -111,7 +131,6 @@ export default function BarChartVertical() {
             .attr("height", yScale.bandwidth())
             .call((enter) =>
               enter
-
                 .transition()
                 .duration(smooth ? 750 : 0)
                 .attr("width", (d) => xScale(d.value_sum) - xScale(0))

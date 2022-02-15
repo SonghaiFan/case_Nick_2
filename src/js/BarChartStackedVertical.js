@@ -1,4 +1,4 @@
-export default function BarChartVertical() {
+export default function BarChartStackedVertical() {
   // CANVAS SETUP
   let margin = {
       top: 0.1,
@@ -23,13 +23,13 @@ export default function BarChartVertical() {
       const innerWidth = width * (1 - margin.left - margin.right),
         innerHeight = height * (1 - margin.top - margin.bottom);
 
-      const fl2 = container.select(".figureLayer2"),
+      const fl1 = container.select(".figureLayer1"),
         xl = container.select(".xAxisLayer"),
         yl = container.select(".yAxisLayer");
 
-      fl2
+      fl1
         .transition()
-        .duration(smooth ? 750 : 0)
+        .duration(750)
         .style("opacity", 1)
         .attr(
           "transform",
@@ -38,14 +38,21 @@ export default function BarChartVertical() {
 
       const groupKey = "key";
 
-      const aqDataSum = aqData
+      const data = aqData
         .groupby(groupKey)
         .rollup({ value_sum: (d) => op.sum(d.value) })
-        .orderby("value_sum");
+        .orderby("value_sum")
+        .objects();
 
-      const data = aqDataSum.objects();
+      const keyArray = Array.from(new Set(data.map((d) => d[groupKey])));
 
-      const data2 = aqDataSum.groupby(groupKey).objects({ grouped: "entries" });
+      const data2 = aqData
+        .groupby(groupKey)
+        .derive({ value_sum: (d) => op.sum(d.value) })
+        .derive({ value_stackmax: aq.rolling((d) => op.sum(d.value)) })
+        .derive({ value_stackmin: (d) => op.lag(d.value_stackmax, 1, 0) })
+        // .orderby(aq.desc("value_sum"))
+        .objects({ grouped: "entries" });
 
       const xScale = d3
         .scaleLinear()
@@ -90,54 +97,58 @@ export default function BarChartVertical() {
 
       // RENDER
 
-      console.log(data2);
-
-      const OEg = fl2
+      const OEg = fl1
         .selectAll("g")
-        .data(data2, (d) => d[0] || d.name)
+        .data(data2, (d) => d[0])
         .join("g")
         .attr("class", (d) => `OEg key_${d[0]}`);
 
-      const OE = OEg.selectAll("rect").data((d) => d[1]);
+      const OE = OEg.selectAll("rect").data(
+        (d) => d[1],
+        (d) => d.id
+      );
 
       OE.join(
-        (enter) =>
-          enter
+        function (enter) {
+          const rectEner = enter
             .append("rect")
-            .attr("id", (d) => d[groupKey])
-            .attr("fill", (d) => colorScale(d[groupKey]))
-            .attr("x", (d) => xScale(0))
+            .attr("class", (d, i) => `OErect id_${d.id}`)
             .attr("y", (d) => yScale(d[groupKey]))
             .attr("height", yScale.bandwidth())
-            .call((enter) =>
-              enter
+            .style("opacity", 0)
+            .attr("fill", (d) => colorScale(d[groupKey]));
 
-                .transition()
-                .duration(smooth ? 750 : 0)
-                .attr("width", (d) => xScale(d.value_sum) - xScale(0))
-            ),
-        (update) =>
-          update.call((update) =>
-            update
-              .transition()
-              .duration(750)
-              .attr("fill", (d) => colorScale(d[groupKey]))
-              .attr("y", (d) => yScale(d[groupKey]))
-              .attr("height", yScale.bandwidth())
-              // .transition()
-              // .duration(750)
-              .attr("x", (d) => xScale(0))
-              .attr("width", (d) => xScale(d.value_sum) - xScale(0))
-          ),
-        (exit) =>
-          exit.call((exit) =>
-            exit
-              .transition()
-              .duration(750)
-              .attr("height", 0)
-              .attr("y", height)
-              .remove()
-          )
+          rectEner
+            .transition()
+            .duration(smooth ? 750 : 0)
+            .delay(smooth ? 750 : 0)
+            .attr("x", (d) => xScale(d.value_stackmin))
+            .attr("width", (d) => xScale(d.value_stackmax - d.value_stackmin))
+            .style("opacity", 1);
+
+          return rectEner;
+        },
+        function (update) {
+          return update
+            .style("opacity", 1)
+            .transition()
+            .duration(750)
+            .delay(
+              (d, i) =>
+                (keyArray.length - keyArray.indexOf(d[groupKey])) * 50 + i * 1
+            )
+            .attr("y", (d) => yScale(d[groupKey]))
+            .attr("height", yScale.bandwidth())
+            .transition()
+            .attr("x", (d) => xScale(d.value_stackmin))
+            .attr("width", (d) => xScale(d.value_stackmax - d.value_stackmin))
+            .attr("fill", (d) => colorScale(d[groupKey]));
+        },
+        function (exit) {
+          return exit.call((exit) =>
+            exit.transition().duration(750).style("opacity", 0).remove()
+          );
+        }
       );
     });
   }
