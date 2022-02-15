@@ -9,14 +9,8 @@ export default function GridLayout() {
       const gridColumns = grid_columns
         ? grid_columns
         : Math.round(Math.sqrt(aqData.size));
-      // console.log(data);
 
       const container = d3.select(this);
-
-      // const continerRect = container.node().getBoundingClientRect();
-      // const { width, height } = continerRect;
-      // const innerWidth = width - margin.left - margin.right,
-      //   innerHeight = height - margin.top - margin.bottom;
 
       container
         .style("grid-template-columns", `repeat(${gridColumns},1fr)`)

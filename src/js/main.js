@@ -1,4 +1,5 @@
-import UnitChart from "./UnitChart.js";
+import UnitchartGridLayoutKey from "./UnitchartGridLayoutKey.js";
+import UnitchartGridLayoutId from "./UnitchartGridLayoutId.js";
 import GridLayout from "./GridLayout.js";
 
 const figures = d3.selectAll(".figure");
@@ -16,10 +17,51 @@ const scroller = scrollama();
 
 // const aqData = await aq.loadCSV("src/data/demo.csv");
 const articleData = await aq.loadCSV("src/data/article_data.csv");
+const hierarchyData = await aq.loadCSV("src/data/hierarchy_data.csv");
+const articleData25 = await aq.loadCSV("src/data/article_data25.csv");
+const hierarchyData25 = await aq.loadCSV("src/data/hierarchy_data25.csv");
+
+const colorValue = hierarchyData
+  .groupby(["group_or_issue", "key"])
+  .rollup({ count: (d) => op.count() })
+  .orderby(["group_or_issue", aq.desc("count")])
+  .groupby("group_or_issue")
+  .derive({ rolling_count: aq.rolling((d) => op.sum(d.count)) })
+  .derive({ percent: (d) => d.rolling_count / op.sum(d.count) || 0 })
+  .derive({
+    color: aq.escape((d) =>
+      d.group_or_issue == "group"
+        ? d3.interpolateWarm(d.percent)
+        : d3.interpolateCool(d.percent)
+    ),
+  });
+
+// const colorValue25 = hierarchyData25
+//   .groupby(["group_or_issue", "key"])
+//   .rollup({ count: (d) => op.count() })
+//   .orderby(["group_or_issue", aq.desc("count")])
+//   .groupby("group_or_issue")
+//   .derive({ rolling_count: aq.rolling((d) => op.sum(d.count)) })
+//   .derive({ percent: (d) => d.rolling_count / op.sum(d.count) || 0 })
+//   .derive({
+//     color: aq.escape((d) =>
+//       d.group_or_issue == "group"
+//         ? d3.interpolateTurbo(d.percent)
+//         : d3.interpolateViridis(d.percent)
+//     ),
+//   });
 
 // preparation for rendering
 
-const UnitGridLayout = GridLayout();
+// const UnitGridLayout = GridLayout();
+
+const keyUnitChart = UnitchartGridLayoutKey()
+  .color_domain(colorValue.array("key"))
+  .color_range(colorValue.array("color"));
+
+const idUnitChart = UnitchartGridLayoutId()
+  .color_domain(colorValue.array("key"))
+  .color_range(colorValue.array("color"));
 
 // const HorizontalBarchart_1 = HorizontalBarchart()
 //   .dim_color("country")
@@ -27,7 +69,7 @@ const UnitGridLayout = GridLayout();
 //   .color_domain(aqData.array("country"));
 
 const dumyData = aq.table({
-  id: d3.range(300),
+  id: d3.range(3845),
 });
 
 function stepTrigger(index) {
@@ -35,28 +77,60 @@ function stepTrigger(index) {
     case 0:
       break;
     case 1:
-      fig1.datum(dumyData.slice(0, 0)).call(UnitGridLayout);
+      fig1.datum(articleData.filter((d) => false)).call(idUnitChart);
+      fig1.datum(hierarchyData.filter((d) => false)).call(keyUnitChart);
       break;
     case 2:
-      fig1.datum(dumyData).call(UnitGridLayout);
+      fig1.datum(articleData.filter((d) => d.id == 1)).call(idUnitChart);
       break;
     case 3:
-      fig1.datum(dumyData.slice(0, 100).sample(100)).call(UnitGridLayout);
+      fig1.datum(hierarchyData.filter((d) => false)).call(keyUnitChart);
+      fig1.datum(dumyData).call(idUnitChart);
       break;
     case 4:
-      fig1.datum(dumyData.slice(0, 300)).call(UnitGridLayout);
+      fig1.datum(dumyData.slice(0, 1000).sample(1000)).call(idUnitChart);
       break;
     case 5:
-      fig1.datum(dumyData.slice(0, 1)).call(UnitGridLayout);
+      fig1.datum(dumyData.slice(0, 588).sample(588)).call(idUnitChart);
+      fig1.datum(hierarchyData.filter((d) => false)).call(keyUnitChart);
       break;
     case 6:
-      fig1.datum(dumyData.slice(0, 2)).call(UnitGridLayout);
+      fig1.datum(articleData).call(
+        idUnitChart.margin({
+          top: 0.1,
+          right: 0,
+          bottom: 0.1,
+          left: 0,
+        })
+      );
+      fig1.datum(hierarchyData).call(
+        keyUnitChart.margin({
+          top: 0.1,
+          right: 0,
+          bottom: 0.1,
+          left: 0,
+        })
+      );
       break;
     case 7:
-      fig1.datum(dumyData.slice(0, 4)).call(UnitGridLayout);
+      fig1.datum(articleData).call(
+        idUnitChart.margin({
+          top: 0.1,
+          right: 0.5,
+          bottom: 0.1,
+          left: 0,
+        })
+      );
+      fig1.datum(hierarchyData).call(
+        keyUnitChart.margin({
+          top: 0.1,
+          right: 0.5,
+          bottom: 0.1,
+          left: 0,
+        })
+      );
       break;
     case 8:
-      fig1.datum(dumyData.slice(0, 5)).call(UnitGridLayout);
       break;
     case 9:
       break;
@@ -153,7 +227,8 @@ function initialCanvas() {
     .data(defaultLayters)
     .enter()
     .append("g")
-    .attr("class", (d) => d);
+    .attr("class", (d) => d)
+    .style("opacity", 0);
 }
 
 function init() {

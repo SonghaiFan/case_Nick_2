@@ -90,10 +90,12 @@ a:hover {
   shape-rendering: optimizeSpeed;
 }
 
-/* .figure div {
-  overflow: scroll;
+.figure div {
+  overflow: auto;
   height: 100%;
-} */
+  white-space: pre-wrap;
+  text-align: left;
+}
 
 .step {
   text-align: left;
