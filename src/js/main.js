@@ -1,6 +1,6 @@
 import UnitchartGridLayoutKey from "./UnitchartGridLayoutKey.js";
 import UnitchartGridLayoutId from "./UnitchartGridLayoutId.js";
-import GridLayout from "./GridLayout.js";
+import BarChartVertical from "./BarChartVertical.js";
 
 const figures = d3.selectAll(".figure");
 const fig1 = d3.select("#fig1");
@@ -36,21 +36,6 @@ const colorValue = hierarchyData
     ),
   });
 
-// const colorValue25 = hierarchyData25
-//   .groupby(["group_or_issue", "key"])
-//   .rollup({ count: (d) => op.count() })
-//   .orderby(["group_or_issue", aq.desc("count")])
-//   .groupby("group_or_issue")
-//   .derive({ rolling_count: aq.rolling((d) => op.sum(d.count)) })
-//   .derive({ percent: (d) => d.rolling_count / op.sum(d.count) || 0 })
-//   .derive({
-//     color: aq.escape((d) =>
-//       d.group_or_issue == "group"
-//         ? d3.interpolateTurbo(d.percent)
-//         : d3.interpolateViridis(d.percent)
-//     ),
-//   });
-
 // preparation for rendering
 
 // const UnitGridLayout = GridLayout();
@@ -60,6 +45,10 @@ const keyUnitChart = UnitchartGridLayoutKey()
   .color_range(colorValue.array("color"));
 
 const idUnitChart = UnitchartGridLayoutId()
+  .color_domain(colorValue.array("key"))
+  .color_range(colorValue.array("color"));
+
+const keyBarChartVertical = BarChartVertical()
   .color_domain(colorValue.array("key"))
   .color_range(colorValue.array("color"));
 
@@ -116,31 +105,91 @@ function stepTrigger(index) {
       fig1.datum(articleData).call(
         idUnitChart.margin({
           top: 0.1,
-          right: 0.5,
+          right: 0.6,
           bottom: 0.1,
-          left: 0,
+          left: 0.1,
         })
       );
       fig1.datum(hierarchyData).call(
         keyUnitChart.margin({
           top: 0.1,
-          right: 0.5,
+          right: 0.1,
           bottom: 0.1,
-          left: 0,
+          left: 0.6,
+        })
+      );
+      fig1.select(".xAxisLayer").selectAll("*").remove();
+      fig1.select(".yAxisLayer").selectAll("*").remove();
+      break;
+    case 8:
+      fig1.datum(articleData).call(
+        idUnitChart.margin({
+          top: 0.1,
+          right: 0.6,
+          bottom: 0.1,
+          left: 0.1,
+        })
+      );
+      fig1.datum(hierarchyData).call(
+        keyBarChartVertical.margin({
+          top: 0.1,
+          right: 0.1,
+          bottom: 0.1,
+          left: 0.6,
         })
       );
       break;
-    case 8:
-      break;
     case 9:
+      fig1.datum(articleData25).call(
+        idUnitChart.margin({
+          top: 0.1,
+          right: 0.6,
+          bottom: 0.1,
+          left: 0.1,
+        })
+      );
+      fig1.datum(hierarchyData25).call(
+        keyBarChartVertical.margin({
+          top: 0.1,
+          right: 0.1,
+          bottom: 0.1,
+          left: 0.6,
+        })
+      );
       break;
     case 10:
+      fig1
+        .datum(hierarchyData25.filter((d) => d.group_or_issue == "group"))
+        .call(
+          keyBarChartVertical.margin({
+            top: 0.1,
+            right: 0.1,
+            bottom: 0.1,
+            left: 0.6,
+          })
+        );
       break;
     case 11:
-      // fig3.datum(aqData).call();
+      fig1
+        .datum(hierarchyData25.filter((d) => d.group_or_issue == "issue"))
+        .call(
+          keyBarChartVertical.margin({
+            top: 0.1,
+            right: 0.1,
+            bottom: 0.1,
+            left: 0.6,
+          })
+        );
       break;
     case 12:
-      // fig3.datum(aqData).call();
+      fig1.datum(hierarchyData25.orderby("group_or_issue")).call(
+        keyBarChartVertical.margin({
+          top: 0.1,
+          right: 0.1,
+          bottom: 0.1,
+          left: 0.6,
+        })
+      );
       break;
     case 13:
       // fig3.datum(aqData).call();
