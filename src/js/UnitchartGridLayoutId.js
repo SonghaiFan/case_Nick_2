@@ -25,6 +25,8 @@ export default function UnitchartGridLayoutId() {
       const fl = container.select(".figureLayer"),
         al = container.select(".anotationLayer");
 
+      const tooltip = d3.select("#tooltipContainer");
+
       fl.transition()
         .duration(750)
         .style("opacity", 1)
@@ -132,14 +134,7 @@ export default function UnitchartGridLayoutId() {
         .then(al.selectAll("*").remove());
 
       if (details && data.length == 1) {
-        al.transition()
-          .duration(750)
-          .delay(750)
-          .style("opacity", 1)
-          .attr(
-            "transform",
-            `translate(${width * margin.left},${height * margin.top})`
-          );
+        al.transition().duration(750).delay(750).style("opacity", 1);
 
         const lableText = (text) =>
           text
@@ -206,6 +201,32 @@ export default function UnitchartGridLayoutId() {
           .delay(750)
           .style("opacity", 1);
       }
+
+      const rects = fl.selectAll("rect");
+
+      rects
+        .on("mouseover", (e, d) => {
+          if (d.heading) {
+            tooltip
+              .style("display", "block")
+              .html(() => `${d.publisher}<br><b>${d.heading}</b>`);
+          }
+        })
+        .on("mousemove", (e, d) => {
+          tooltip
+            .style("left", d3.pointer(e)[0] + "px")
+            .style("top", d3.pointer(e)[1] + "px");
+        })
+        .on("mouseout", () => {
+          tooltip.style("display", "none");
+        })
+        .on("click", function (e, d) {
+          let stroke_status = d3.select(this).attr("stroke");
+          d3.select(this).attr(
+            "stroke",
+            stroke_status == "white" ? "red" : "white"
+          );
+        });
     });
   }
 

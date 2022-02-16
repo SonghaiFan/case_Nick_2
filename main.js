@@ -146,7 +146,6 @@ function stepTrigger(index) {
       fig1.select(".yAxisLayer").selectAll("*").remove();
       break;
     case 8:
-      fig1.datum(articleData).call(idUnitChart);
       fig1.datum(hierarchyData).call(
         keyBarChartStackedVertical.margin({
           top: 0.1,
@@ -156,9 +155,9 @@ function stepTrigger(index) {
         })
       );
       fig1.select(".figureLayer2").selectAll("*").remove();
+      fig1.datum(articleData).call(idUnitChart);
       break;
     case 9:
-      fig1.datum(articleData).call(idUnitChart);
       fig1.datum(hierarchyData).call(
         keyBarChartVertical.smooth(false).margin({
           top: 0.1,
@@ -176,6 +175,7 @@ function stepTrigger(index) {
           left: 0.6,
         })
       );
+      fig1.datum(articleData).call(idUnitChart);
       break;
     case 10:
       fig1.datum(articleData25).call(idUnitChart);
@@ -218,6 +218,7 @@ function stepTrigger(index) {
     case 15:
       fig1.select(".xAxisLayer").selectAll("*").remove();
       fig1.select(".yAxisLayer").selectAll("*").remove();
+
       fig1.datum(hierarchyData25).call(
         aSankeyChartDm.margin({
           top: 0.1,
@@ -237,6 +238,9 @@ function stepTrigger(index) {
       break;
     case 16:
       fig1.select(".figureLayer2").style("opacity", 0);
+
+      fig1.datum(articleData25).call(idUnitChart.details(false));
+      fig1.datum(hierarchyData25).call(keyUnitChart);
       fig1.datum(hierarchyData25).call(
         aSankeyChart.margin({
           top: 0.1,
@@ -245,8 +249,6 @@ function stepTrigger(index) {
           left: 0.45,
         })
       );
-      fig1.datum(articleData25).call(idUnitChart.details(false));
-      fig1.datum(hierarchyData25).call(keyUnitChart);
       break;
     case 17:
       fig1.datum(articleData25.filter((d) => d.id == 1)).call(idUnitChart);

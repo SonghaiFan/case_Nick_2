@@ -90,7 +90,7 @@ a:hover {
   shape-rendering: optimizeSpeed;
 }
 
-.figure div {
+foreignObject div {
   overflow: auto;
   height: 100%;
   white-space: pre-wrap;
@@ -246,4 +246,12 @@ a:hover {
 
 .nodeGroup rect:hover {
   stroke: black;
+}
+
+#tooltipContainer {
+  z-index: 100;
+  display: none;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px;
 }
