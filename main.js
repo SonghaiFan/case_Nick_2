@@ -249,24 +249,24 @@ function stepTrigger(index) {
       fig1.datum(hierarchyData25).call(keyUnitChart);
       break;
     case 17:
-      fig1.datum(hierarchyData25.filter((d) => d.id == 1)).call(aSankeyChart);
       fig1.datum(articleData25.filter((d) => d.id == 1)).call(idUnitChart);
       fig1.datum(hierarchyData25.filter((d) => d.id == 1)).call(keyUnitChart);
+      fig1.datum(hierarchyData25.filter((d) => d.id == 1)).call(aSankeyChart);
       break;
     case 18:
-      fig1.datum(hierarchyData25.filter((d) => d.id <= 2)).call(aSankeyChart);
       fig1.datum(articleData25.filter((d) => d.id <= 2)).call(idUnitChart);
       fig1.datum(hierarchyData25.filter((d) => d.id <= 2)).call(keyUnitChart);
+      fig1.datum(hierarchyData25.filter((d) => d.id <= 2)).call(aSankeyChart);
       break;
     case 19:
-      fig1.datum(hierarchyData25.filter((d) => d.id <= 4)).call(aSankeyChart);
       fig1.datum(articleData25.filter((d) => d.id <= 4)).call(idUnitChart);
       fig1.datum(hierarchyData25.filter((d) => d.id <= 4)).call(keyUnitChart);
+      fig1.datum(hierarchyData25.filter((d) => d.id <= 4)).call(aSankeyChart);
       break;
     case 20:
-      fig1.datum(hierarchyData25).call(aSankeyChart);
       fig1.datum(articleData25).call(idUnitChart);
       fig1.datum(hierarchyData25).call(keyUnitChart);
+      fig1.datum(hierarchyData25).call(aSankeyChart);
       break;
     case 21:
       break;

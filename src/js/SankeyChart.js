@@ -258,6 +258,7 @@ export default function SankeyChart() {
               .duration(500)
               .attr("d", d3.sankeyLinkHorizontal())
               .attr("stroke-width", 0)
+              .remove()
           )
       );
 
@@ -288,7 +289,7 @@ export default function SankeyChart() {
           fl.select(`#${overedRectId}`).attr("fill", "white");
         })
         .on("mouseout", function (e, d) {
-          d3.select(this).attr("stroke-width", (d) => Math.max(1, d.width));
+          d3.select(this).attr("stroke-width", d.width);
           fl.selectAll("rect").attr("fill", "black");
         });
 
@@ -310,10 +311,11 @@ export default function SankeyChart() {
           fl.selectAll("rect").attr("fill", "black");
         });
 
-      const rects = fl.selectAll("rect");
+      const rects = fl.selectAll("rect").raise();
 
       rects
         .on("mouseover", function (e, d) {
+          console.log("over here");
           rects.attr("fill", "black");
           let overedRect = d3.select(this);
           overedRect.attr("fill", "white");

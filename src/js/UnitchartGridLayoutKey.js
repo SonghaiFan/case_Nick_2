@@ -133,7 +133,11 @@ export default function UnitchartGridLayoutKey() {
             .style("opacity", 0)
             .attr("fill", (d) => colorScale(d[groupKey]));
 
-          rectEner.transition().duration(750).delay(750).style("opacity", 1);
+          rectEner
+            .transition()
+            .duration(750)
+            .delay((d, i) => 750 + d.id * 10)
+            .style("opacity", 1);
 
           return rectEner;
         },

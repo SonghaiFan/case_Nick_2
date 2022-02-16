@@ -23,9 +23,13 @@ export default function BarChartVertical() {
       const innerWidth = width * (1 - margin.left - margin.right),
         innerHeight = height * (1 - margin.top - margin.bottom);
 
-      const fl2 = container.select(".figureLayer2"),
+      const fl = container.select(".figureLayer"),
+        fl2 = container.select(".figureLayer2"),
+        al = container.select(".anotationLayer"),
         xl = container.select(".xAxisLayer"),
         yl = container.select(".yAxisLayer");
+
+      al.transition().duration(750).style("opacity", 1);
 
       fl2
         .transition()
@@ -43,9 +47,16 @@ export default function BarChartVertical() {
         .rollup({ value_sum: (d) => op.sum(d.value) })
         .orderby("value_sum");
 
+      const aqDatAgg = aqData.groupby(groupKey).rollup({
+        count: (d) => op.count(),
+        ids: (d) => op.array_agg(d.id),
+      });
+
       const data = aqDataSum.objects();
 
       const data2 = aqDataSum.groupby(groupKey).objects({ grouped: "entries" });
+
+      const dataMap = aqDatAgg.groupby(groupKey).objects({ grouped: "map" });
 
       const xScale = d3
         .scaleLinear()
@@ -92,11 +103,44 @@ export default function BarChartVertical() {
 
       console.log(data2);
 
+      const idArray = [...new Set(aqData.array("id"))];
+
       const OEg = fl2
         .selectAll("g")
         .data(data2, (d) => d[0] || d.name)
         .join("g")
-        .attr("class", (d) => `OEg key_${d[0]}`);
+        .attr("class", (d) => `OEg key_${d[0]}`)
+        .on("mouseover", function (e, d) {
+          let overKeyGroup = d[0];
+
+          let articleInGroup = dataMap.get(overKeyGroup)[0].ids;
+          console.log(articleInGroup);
+
+          fl.selectAll("rect").attr("fill", "black");
+
+          articleInGroup.forEach(function (i) {
+            let articleRect = fl.select(`#rect${i}`);
+            articleRect.attr("fill", colorScale(overKeyGroup));
+          });
+
+          let percentage = (articleInGroup.length / idArray.length) * 100;
+
+          al.selectAll("text")
+            .data([null])
+            .join("text")
+            .attr("x", 150)
+            .attr("y", 75)
+            .style("fill", "white")
+            .text(
+              (d) =>
+                `Code "${overKeyGroup}" included in ${
+                  articleInGroup.length
+                } articles(${parseFloat(percentage).toFixed(2)}%)`
+            );
+        })
+        .on("mouseout", function (e, d) {
+          fl.selectAll("rect").attr("fill", "black");
+        });
 
       const OE = OEg.selectAll("rect").data((d) => d[1]);
 
