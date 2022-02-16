@@ -23,7 +23,7 @@ export default function SankeyChart() {
       const innerWidth = width * (1 - margin.left - margin.right),
         innerHeight = height * (1 - margin.top - margin.bottom);
 
-      const fl1 = container.select(".figureLayer1"),
+      const fl = container.select(".figureLayer"),
         fl2 = container.select(".figureLayer2"),
         fl3 = container.select(".figureLayer3"),
         fl4 = container.select(".figureLayer4");
@@ -260,6 +260,75 @@ export default function SankeyChart() {
               .attr("stroke-width", 0)
           )
       );
+
+      const link = fl3.selectAll("path");
+
+      link
+        .on("mouseover", function (e, d) {
+          let overedLink = d3.select(this);
+          overedLink.attr("stroke-width", (d) => Math.max(5, d.width)).raise();
+
+          let overedRectId = overedLink
+            .attr("class")
+            .split(" ")[1]
+            .replace("article", "rect");
+
+          let overedLinkGroup = d3.select(this.parentNode);
+          let overedPath = overedLinkGroup.attr("class").split(" ")[1];
+
+          let articleInPath = linksByPath.get(overedPath);
+
+          fl.selectAll("rect").attr("fill", "black");
+
+          articleInPath.forEach(function (i) {
+            let articleRect = fl.select(`#rect${i.id}`);
+            articleRect.attr("fill", "gray");
+          });
+
+          fl.select(`#${overedRectId}`).attr("fill", "white");
+        })
+        .on("mouseout", function (e, d) {
+          d3.select(this).attr("stroke-width", (d) => Math.max(1, d.width));
+          fl.selectAll("rect").attr("fill", "black");
+        });
+
+      const node = fl4.selectAll("rect");
+
+      node
+        .on("mouseover", function (e, d) {
+          fl.selectAll("rect").attr("fill", "black");
+          let articleInNode = d.sourceLinks.length
+            ? d.sourceLinks
+            : d.targetLinks;
+
+          articleInNode.forEach(function (i) {
+            let articleRect = fl.select(`#rect${i.id}`);
+            articleRect.attr("fill", colorScale(d.name));
+          });
+        })
+        .on("mouseout", function (e, d) {
+          fl.selectAll("rect").attr("fill", "black");
+        });
+
+      const rects = fl.selectAll("rect");
+
+      rects
+        .on("mouseover", function (e, d) {
+          rects.attr("fill", "black");
+          let overedRect = d3.select(this);
+          overedRect.attr("fill", "white");
+          let overedId = overedRect.data()[0].id;
+          d3.selectAll(`.linkGroup.article${overedId}`)
+            .attr("stroke", "white")
+            .attr("stroke-width", (d) => Math.max(5, d.width))
+            .raise();
+        })
+        .on("mouseout", function () {
+          rects.attr("fill", "black");
+          d3.selectAll(".linkGroup")
+            .attr("stroke", "gray")
+            .attr("stroke-width", (d) => Math.max(1, d.width));
+        });
     });
   }
 
