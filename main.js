@@ -2,7 +2,7 @@ import UnitchartGridLayoutKey from "./src/js/UnitchartGridLayoutKey.js";
 import UnitchartGridLayoutId from "./src/js/UnitchartGridLayoutId.js";
 import BarChartStackedVertical from "./src/js/BarChartStackedVertical.js";
 import BarChartVertical from "./src/js/BarChartVertical.js";
-import BarChartVerticalCo from "./src/js/BarChartVerticalCo.js";
+// import BarChartVerticalCo from "./src/js/BarChartVerticalCo.js";
 import SankeyChart from "./src/js/SankeyChart.js";
 import SankeyChartDm from "./src/js/SankeyChartDm.js";
 
@@ -60,9 +60,9 @@ const keyBarChartVertical = BarChartVertical()
   .color_domain(colorValue.array("key"))
   .color_range(colorValue.array("color"));
 
-const keyBarChartVerticalCo = BarChartVerticalCo()
-  .color_domain(colorValue.array("key"))
-  .color_range(colorValue.array("color"));
+// const keyBarChartVerticalCo = BarChartVerticalCo()
+//   .color_domain(colorValue.array("key"))
+//   .color_range(colorValue.array("color"));
 
 const aSankeyChart = SankeyChart()
   .color_domain(colorValue.array("key"))
@@ -78,7 +78,7 @@ const aSankeyChartDm = SankeyChartDm()
 //   .color_domain(aqData.array("country"));
 
 const dumyData = aq.table({
-  id: d3.range(3845),
+  id: d3.range(1, 3846),
 });
 
 function stepTrigger(index) {
@@ -90,32 +90,16 @@ function stepTrigger(index) {
       fig1.datum(hierarchyData.filter((d) => false)).call(keyUnitChart);
       break;
     case 2:
-      fig1
-        .datum(articleData.filter((d) => d.id == 1))
-        .call(idUnitChart.details(true));
+      fig1.datum(hierarchyData.filter((d) => false)).call(keyUnitChart);
+      fig1.datum(articleData.filter((d) => d.id == 1)).call(idUnitChart);
       break;
     case 3:
-      fig1.datum(hierarchyData.filter((d) => false)).call(keyUnitChart);
-      fig1.datum(dumyData).call(idUnitChart);
+      fig1.datum(hierarchyData.filter((d) => d.id < 16)).call(keyUnitChart);
+      fig1
+        .datum(articleData.filter((d) => d.id < 16))
+        .call(idUnitChart.details(true));
       break;
     case 4:
-      fig1
-        .datum(dumyData.slice(0, 1000).sample(1000))
-        .call(idUnitChart.details(false));
-      break;
-    case 5:
-      fig1.datum(dumyData.slice(0, 588).sample(588)).call(idUnitChart);
-      fig1.datum(hierarchyData.filter((d) => false)).call(keyUnitChart);
-      break;
-    case 6:
-      fig1.datum(articleData).call(
-        idUnitChart.margin({
-          top: 0.1,
-          right: 0,
-          bottom: 0.1,
-          left: 0,
-        })
-      );
       fig1.datum(hierarchyData).call(
         keyUnitChart.margin({
           top: 0.1,
@@ -124,8 +108,22 @@ function stepTrigger(index) {
           left: 0,
         })
       );
+      fig1.datum(articleData).call(
+        idUnitChart
+          .margin({
+            top: 0.1,
+            right: 0,
+            bottom: 0.1,
+            left: 0,
+          })
+          .details(false)
+      );
       break;
-    case 7:
+    case 5:
+      fig1.datum(articleData).call(idUnitChart.details(false));
+      fig1.datum(hierarchyData).call(keyUnitChart);
+      break;
+    case 6:
       fig1.datum(articleData).call(
         idUnitChart.margin({
           top: 0.1,
@@ -145,7 +143,7 @@ function stepTrigger(index) {
       fig1.select(".xAxisLayer").selectAll("*").remove();
       fig1.select(".yAxisLayer").selectAll("*").remove();
       break;
-    case 8:
+    case 7:
       fig1.datum(hierarchyData).call(
         keyBarChartStackedVertical.margin({
           top: 0.1,
@@ -157,7 +155,7 @@ function stepTrigger(index) {
       fig1.select(".figureLayer2").selectAll("*").remove();
       fig1.datum(articleData).call(idUnitChart);
       break;
-    case 9:
+    case 8:
       fig1.datum(hierarchyData).call(
         keyBarChartVertical.smooth(false).margin({
           top: 0.1,
@@ -177,7 +175,7 @@ function stepTrigger(index) {
       );
       fig1.datum(articleData).call(idUnitChart);
       break;
-    case 10:
+    case 9:
       fig1.datum(articleData25).call(idUnitChart);
       fig1.datum(hierarchyData25).call(
         keyUnitChart.margin({
@@ -188,6 +186,8 @@ function stepTrigger(index) {
         })
       );
       fig1.datum(hierarchyData25).call(keyBarChartVertical.smooth(true));
+      break;
+    case 10:
       break;
     case 11:
       fig1
@@ -202,23 +202,15 @@ function stepTrigger(index) {
       break;
     case 13:
       fig1.datum(hierarchyData25).call(keyBarChartVertical);
+
       break;
     case 14:
-      fig1.datum(hierarchyData25).call(
-        keyBarChartVerticalCo.margin({
-          top: 0.1,
-          right: 0.1,
-          bottom: 0.1,
-          left: 0.6,
-        })
-      );
       fig1.select(".figureLayer3").selectAll("*").remove();
       fig1.select(".figureLayer4").selectAll("*").remove();
-      break;
-    case 15:
       fig1.select(".xAxisLayer").selectAll("*").remove();
       fig1.select(".yAxisLayer").selectAll("*").remove();
-
+      fig1.datum(articleData25).call(idUnitChart);
+      fig1.datum(hierarchyData25).call(keyUnitChart);
       fig1.datum(hierarchyData25).call(
         aSankeyChartDm.margin({
           top: 0.1,
@@ -235,40 +227,31 @@ function stepTrigger(index) {
           left: 0.45,
         })
       );
-      break;
-    case 16:
-      fig1.select(".figureLayer2").style("opacity", 0);
 
-      fig1.datum(articleData25).call(idUnitChart.details(false));
-      fig1.datum(hierarchyData25).call(keyUnitChart);
-      fig1.datum(hierarchyData25).call(
-        aSankeyChart.margin({
-          top: 0.1,
-          right: 0.1,
-          bottom: 0.1,
-          left: 0.45,
-        })
-      );
       break;
-    case 17:
+    case 15:
       fig1.datum(articleData25.filter((d) => d.id == 1)).call(idUnitChart);
       fig1.datum(hierarchyData25.filter((d) => d.id == 1)).call(keyUnitChart);
+      fig1.datum(hierarchyData25.filter((d) => d.id == 1)).call(aSankeyChartDm);
       fig1.datum(hierarchyData25.filter((d) => d.id == 1)).call(aSankeyChart);
       break;
-    case 18:
+    case 16:
       fig1.datum(articleData25.filter((d) => d.id <= 2)).call(idUnitChart);
       fig1.datum(hierarchyData25.filter((d) => d.id <= 2)).call(keyUnitChart);
+      fig1.datum(hierarchyData25.filter((d) => d.id <= 2)).call(aSankeyChartDm);
       fig1.datum(hierarchyData25.filter((d) => d.id <= 2)).call(aSankeyChart);
       break;
+    case 17:
+      fig1.datum(articleData25.filter((d) => d.id <= 3)).call(idUnitChart);
+      fig1.datum(hierarchyData25.filter((d) => d.id <= 3)).call(keyUnitChart);
+      fig1.datum(hierarchyData25.filter((d) => d.id <= 3)).call(aSankeyChartDm);
+      fig1.datum(hierarchyData25.filter((d) => d.id <= 3)).call(aSankeyChart);
+      break;
+    case 18:
+      break;
     case 19:
-      fig1.datum(articleData25.filter((d) => d.id <= 4)).call(idUnitChart);
-      fig1.datum(hierarchyData25.filter((d) => d.id <= 4)).call(keyUnitChart);
-      fig1.datum(hierarchyData25.filter((d) => d.id <= 4)).call(aSankeyChart);
       break;
     case 20:
-      fig1.datum(articleData25).call(idUnitChart);
-      fig1.datum(hierarchyData25).call(keyUnitChart);
-      fig1.datum(hierarchyData25).call(aSankeyChart);
       break;
     case 21:
       break;
@@ -333,12 +316,12 @@ function setStepNavigationBar() {
 
 function initialCanvas() {
   const defaultLayters = [
-    "morphLayer",
     "figureLayer",
     "figureLayer1",
     "figureLayer2",
     "figureLayer3",
     "figureLayer4",
+    "morphLayer5",
     "xAxisLayer",
     "yAxisLayer",
     "anotationLayer",

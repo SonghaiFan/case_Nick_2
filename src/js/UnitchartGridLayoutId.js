@@ -2,7 +2,7 @@ export default function UnitchartGridLayoutId() {
   // CANVAS SETUP
   let margin = {
       top: 0.1,
-      right: 0,
+      right: 0.2,
       bottom: 0.1,
       left: 0,
     },
@@ -22,8 +22,7 @@ export default function UnitchartGridLayoutId() {
       const innerWidth = width * (1 - margin.left - margin.right),
         innerHeight = height * (1 - margin.top - margin.bottom);
 
-      const fl = container.select(".figureLayer"),
-        al = container.select(".anotationLayer");
+      const fl = container.select(".figureLayer");
 
       const tooltip = d3.select("#tooltipContainer");
 
@@ -85,6 +84,7 @@ export default function UnitchartGridLayoutId() {
             .append("rect")
             .attr("id", (d) => "rect" + d.id)
             .attr("stroke", "white")
+            .attr("fill", details ? "white" : "null")
             .attr("x", (d) => justedxValue(d))
             .attr("y", (d) => -2 * height)
             .attr("height", sizeValue)
@@ -99,10 +99,11 @@ export default function UnitchartGridLayoutId() {
         function (update) {
           const rectUpdateTransition = update
             .transition()
-            .duration(750)
+            .duration(details ? 1500 : 750)
             .delay((d, i) => d.id)
             .attr("height", sizeValue)
             .attr("width", sizeValue)
+            .attr("fill", details ? "white" : "null")
             .attr("x", (d) => justedxValue(d))
             .attr("y", (d) => justedyValue(d))
             .style("opacity", 1);
@@ -127,25 +128,20 @@ export default function UnitchartGridLayoutId() {
         .end()
         .then(fl.selectAll("foreignObject").remove().remove());
 
-      al.transition()
-        .duration(750)
-        .style("opacity", 0)
-        .end()
-        .then(al.selectAll("*").remove());
-
-      if (details && data.length == 1) {
-        al.transition().duration(750).delay(750).style("opacity", 1);
-
+      if (details) {
         const lableText = (text) =>
           text
-            .replace("indigenous", '<span key="firstnations">indigenous</span>')
             .replace(
-              "migrant",
+              /indigenous/g,
+              '<span key="firstnations">indigenous</span>'
+            )
+            .replace(
+              /migrant/g,
               '<span key="migrantsandrefugees">migrant</span>'
             )
-            .replace("women", '<span key="women">women</span>')
-            .replace("domestic", '<span key="familyrelations">domestic</span>')
-            .replace("violence", '<span key="violence">violence</span>');
+            .replace(/women/g, '<span key="women">women</span>')
+            .replace(/domestic/g, '<span key="familyrelations">domestic</span>')
+            .replace(/violence/g, '<span key="violence">violence</span>');
 
         const istd = fl
           .selectAll("foreignObject")
@@ -157,39 +153,16 @@ export default function UnitchartGridLayoutId() {
           .attr("y", (d) => justedyValue(d))
           .style("opacity", 0)
           .append("xhtml:div")
-          .attr("id", "in_svg_text_div")
+          .attr("class", "in_svg_text_div")
+          .style("font-size", `${sizeValue / 25}px`)
           .html(
-            (d) => `<strong>${d.heading}</strong><br><br>${lableText(d.text)}`
+            (d) =>
+              `<strong>${d.publisher}:${lableText(
+                d.heading
+              )}</strong><br><br>${lableText(d.text)}`
           );
 
-        var keys = [
-          "firstnations",
-          "migrantsandrefugees",
-          "women",
-          "familyrelations",
-          "violence",
-        ];
-        var size = 20;
-
-        al.selectAll("rect")
-          .data(keys)
-          .join("rect")
-          .attr("x", width * 0.75)
-          .attr("y", (d, i) => height * 0.3 + i * (size + 5))
-          .attr("width", size)
-          .attr("height", size)
-          .style("fill", (d) => colorScale(d));
-
-        // Add one dot in the legend for each name.
-        al.selectAll("text")
-          .data(keys)
-          .join("text")
-          .attr("x", width * 0.75 + size * 1.2)
-          .attr("y", (d, i) => height * 0.3 + i * (size + 5) + size / 2)
-          .style("fill", "white")
-          .text((d) => d)
-          .attr("text-anchor", "left")
-          .attr("dy", "0.25em");
+        istd.select("strong").style("font-size", `${sizeValue / 15}px`);
 
         istd.selectAll("span").style("background-color", function () {
           return colorScale(d3.select(this).attr("key"));
@@ -202,31 +175,33 @@ export default function UnitchartGridLayoutId() {
           .style("opacity", 1);
       }
 
-      const rects = fl.selectAll("rect");
+      if (!details) {
+        const rects = fl.selectAll("rect");
 
-      rects
-        .on("mouseover", (e, d) => {
-          if (d.heading) {
+        rects
+          .on("mouseover", (e, d) => {
+            if (d.heading) {
+              tooltip
+                .style("display", "block")
+                .html(() => `${d.publisher}<br><b>${d.heading}</b>`);
+            }
+          })
+          .on("mousemove", (e, d) => {
             tooltip
-              .style("display", "block")
-              .html(() => `${d.publisher}<br><b>${d.heading}</b>`);
-          }
-        })
-        .on("mousemove", (e, d) => {
-          tooltip
-            .style("left", d3.pointer(e)[0] + "px")
-            .style("top", d3.pointer(e)[1] + "px");
-        })
-        .on("mouseout", () => {
-          tooltip.style("display", "none");
-        })
-        .on("click", function (e, d) {
-          let stroke_status = d3.select(this).attr("stroke");
-          d3.select(this).attr(
-            "stroke",
-            stroke_status == "white" ? "red" : "white"
-          );
-        });
+              .style("left", d3.pointer(e)[0] + "px")
+              .style("top", d3.pointer(e)[1] + "px");
+          })
+          .on("mouseout", () => {
+            tooltip.style("display", "none");
+          })
+          .on("click", function (e, d) {
+            let stroke_status = d3.select(this).attr("stroke");
+            d3.select(this).attr(
+              "stroke",
+              stroke_status == "white" ? "red" : "white"
+            );
+          });
+      }
     });
   }
 

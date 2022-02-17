@@ -139,6 +139,7 @@ export default function BarChartVertical() {
             );
         })
         .on("mouseout", function (e, d) {
+          al.selectAll("*").remove();
           fl.selectAll("rect").attr("fill", "black");
         });
 

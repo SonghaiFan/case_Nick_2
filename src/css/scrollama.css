@@ -32,6 +32,13 @@ a:hover {
   text-align: left;
 }
 
+.chapter img {
+  display: block;
+  margin: auto;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
 .intro {
   max-width: none;
   text-align: center;
@@ -90,11 +97,25 @@ a:hover {
   shape-rendering: optimizeSpeed;
 }
 
-foreignObject div {
-  overflow: auto;
-  height: 100%;
+.in_svg_text_div {
+  /* overflow: auto;
+  height: 100%; */
+  font-family: "Times New Roman", Times, serif;
+  color: black;
+  background-color: white;
+  overflow: hidden;
   white-space: pre-wrap;
   text-align: left;
+}
+
+.in_svg_text_div:before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: linear-gradient(transparent 150px, white);
 }
 
 .step {

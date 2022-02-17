@@ -122,9 +122,9 @@ export default function SankeyChart() {
 
       console.log(nodes);
 
-      const nodeGroup4 = fl4.selectAll("g").data(nodes, (d) => d.name);
+      const nodeGroup = fl4.selectAll("g").data(nodes, (d) => d.name);
 
-      nodeGroup4.join(
+      nodeGroup.join(
         (enter) =>
           enter
             .append("g")
@@ -133,23 +133,6 @@ export default function SankeyChart() {
                 ? `nodeGroup sourceGroup ${d.name}`
                 : `nodeGroup targetGroup ${d.name}`
             )
-            .call((enter) =>
-              enter
-                .append("rect")
-                .attr("id", (d) => d.name)
-                .attr("y", (d) => d.y0)
-                .attr("fill", (d) => colorScale(d.name))
-                .attr("height", (d) => d.y1 - d.y0)
-                .attr("opacity", 1)
-            )
-            .call((enter) => {
-              enter
-                .select("rect")
-                .transition()
-                .duration(750)
-                .attr("x", (d) => d.x0)
-                .attr("width", (d) => d.x1 - d.x0);
-            })
             .call((enter) =>
               enter
                 .append("text")
@@ -169,43 +152,22 @@ export default function SankeyChart() {
               enter.select("text").transition().duration(750).attr("opacity", 1)
             ),
         (update) =>
-          update
-            .call((update) =>
-              update
-                .select("rect")
-                .transition()
-                .duration(750)
-                .attr("x", (d) => d.x0)
-                .attr("y", (d) => d.y0)
-                .attr("width", (d) => d.x1 - d.x0)
-                .attr("height", (d) => d.y1 - d.y0)
-                .attr("fill", (d) => colorScale(d.name))
-            )
-            .call((update) =>
-              update
-                .select("text")
-                .transition()
-                .duration(750)
-                .attr("opacity", 1)
-                .attr("y", (d) => (d.y1 + d.y0) / 2)
-                .attr("x", (d) =>
-                  leftNodeList.includes(d.name) ? d.x0 + 30 : d.x1 - 30
-                )
-                .attr("text-anchor", (d) =>
-                  leftNodeList.includes(d.name) ? "start" : "end"
-                )
-            ),
+          update.call((update) =>
+            update
+              .select("text")
+              .transition()
+              .duration(750)
+              .attr("opacity", 1)
+              .attr("y", (d) => (d.y1 + d.y0) / 2)
+              .attr("x", (d) =>
+                leftNodeList.includes(d.name) ? d.x0 + 30 : d.x1 - 30
+              )
+              .attr("text-anchor", (d) =>
+                leftNodeList.includes(d.name) ? "start" : "end"
+              )
+          ),
         (exit) =>
           exit
-            .call((exit) =>
-              exit
-                .select("rect")
-                .transition()
-                .duration(200)
-                .attr("width", 0)
-                .filter((d) => d.x0 < width / 2)
-                .attr("x", (d) => d.x1)
-            )
             .call((exit) =>
               exit.select("text").transition().duration(200).attr("opacity", 0)
             )
@@ -229,8 +191,8 @@ export default function SankeyChart() {
             .append("path")
             .attr("class", (d) => `linkGroup article${d.id}`)
             .attr("d", d3.sankeyLinkHorizontal())
-            .attr("stroke-dasharray", (d, i, n) => n[i].getTotalLength() * 3)
-            .attr("stroke-dashoffset", (d, i, n) => n[i].getTotalLength() * 3)
+            .attr("stroke-dasharray", (d, i, n) => n[i].getTotalLength() * 2)
+            .attr("stroke-dashoffset", (d, i, n) => n[i].getTotalLength() * 2)
             .call((enter) =>
               enter
                 .transition()
@@ -238,7 +200,6 @@ export default function SankeyChart() {
                 .attr("stroke-width", (d) => Math.max(1, d.width))
                 .transition()
                 .duration(750)
-                .delay((d, i) => i * 20)
                 .attr("stroke-dashoffset", 0)
             ),
         (update) =>
@@ -247,7 +208,7 @@ export default function SankeyChart() {
               .transition()
               .duration(750)
               .attr("d", d3.sankeyLinkHorizontal())
-              .attr("stroke-dasharray", (d, i, n) => n[i].getTotalLength() * 3)
+              .attr("stroke-dasharray", (d, i, n) => n[i].getTotalLength() * 2)
               .attr("stroke-width", (d) => Math.max(1, d.width))
               .attr("stroke-dashoffset", 0)
           ),

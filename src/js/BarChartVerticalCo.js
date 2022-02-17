@@ -11,7 +11,7 @@ export default function BarChartVerticalCo() {
     color_range,
     pad = 0.1,
     bin,
-    smooth = true;
+    smooth = false;
 
   function chart(selection) {
     selection.each(function (aqData) {
@@ -23,9 +23,13 @@ export default function BarChartVerticalCo() {
       const innerWidth = width * (1 - margin.left - margin.right),
         innerHeight = height * (1 - margin.top - margin.bottom);
 
-      const fl2 = container.select(".figureLayer2"),
+      const fl = container.select(".figureLayer"),
+        fl2 = container.select(".figureLayer2"),
+        al = container.select(".anotationLayer"),
         xl = container.select(".xAxisLayer"),
         yl = container.select(".yAxisLayer");
+
+      al.transition().duration(750).style("opacity", 1);
 
       fl2
         .transition()
@@ -38,34 +42,21 @@ export default function BarChartVerticalCo() {
 
       const groupKey = "key";
 
-      const aqData_g = aqData
-        .filter((d) => d.group_or_issue == "group")
-        .select("id", "key", "value");
+      const aqDataSum = aqData
+        .groupby(groupKey)
+        .rollup({ value_sum: (d) => op.sum(d.value) })
+        .orderby("group_or_issue");
 
-      const aqData_i = aqData
-        .filter((d) => d.group_or_issue == "issue")
-        .select("id", "key", "value");
+      const aqDatAgg = aqData.groupby(groupKey).rollup({
+        count: (d) => op.count(),
+        ids: (d) => op.array_agg(d.id),
+      });
 
-      const aqData_gi = aqData_g
-        .join(aqData_i, ["id", "id"])
-        .select("id", "key_1", "key_2", "value_1");
+      const data = aqDataSum.objects();
 
-      const aqData_gi_g = aqData_gi
-        .groupby("key_1")
-        .rollup({ value_sum: (d) => op.sum(d.value_1) })
-        .rename({ key_1: "key" });
-      const aqData_gi_i = aqData_gi
-        .groupby("key_2")
-        .rollup({ value_sum: (d) => op.sum(d.value_1) })
-        .rename({ key_2: "key" });
+      const data2 = aqDataSum.groupby(groupKey).objects({ grouped: "entries" });
 
-      const aqDataCo = aqData_gi_g.concat(aqData_gi_i).orderby("value_sum");
-
-      const data = aqDataCo.objects();
-
-      const keyArray = Array.from(new Set(data.map((d) => d[groupKey])));
-
-      const data2 = aqDataCo.groupby(groupKey).objects({ grouped: "entries" });
+      const dataMap = aqDatAgg.groupby(groupKey).objects({ grouped: "map" });
 
       const xScale = d3
         .scaleLinear()
@@ -112,11 +103,45 @@ export default function BarChartVerticalCo() {
 
       console.log(data2);
 
+      const idArray = [...new Set(aqData.array("id"))];
+
       const OEg = fl2
         .selectAll("g")
         .data(data2, (d) => d[0] || d.name)
         .join("g")
-        .attr("class", (d) => `OEg key_${d[0]}`);
+        .attr("class", (d) => `OEg key_${d[0]}`)
+        .on("mouseover", function (e, d) {
+          let overKeyGroup = d[0];
+
+          let articleInGroup = dataMap.get(overKeyGroup)[0].ids;
+          console.log(articleInGroup);
+
+          fl.selectAll("rect").attr("fill", "black");
+
+          articleInGroup.forEach(function (i) {
+            let articleRect = fl.select(`#rect${i}`);
+            articleRect.attr("fill", colorScale(overKeyGroup));
+          });
+
+          let percentage = (articleInGroup.length / idArray.length) * 100;
+
+          al.selectAll("text")
+            .data([null])
+            .join("text")
+            .attr("x", 150)
+            .attr("y", 75)
+            .style("fill", "white")
+            .text(
+              (d) =>
+                `Code "${overKeyGroup}" included in ${
+                  articleInGroup.length
+                } articles(${parseFloat(percentage).toFixed(2)}%)`
+            );
+        })
+        .on("mouseout", function (e, d) {
+          al.selectAll("*").remove();
+          fl.selectAll("rect").attr("fill", "black");
+        });
 
       const OE = OEg.selectAll("rect").data((d) => d[1]);
 
@@ -131,6 +156,7 @@ export default function BarChartVerticalCo() {
             .attr("height", yScale.bandwidth())
             .call((enter) =>
               enter
+
                 .transition()
                 .duration(smooth ? 750 : 0)
                 .attr("width", (d) => xScale(d.value_sum) - xScale(0))

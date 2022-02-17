@@ -2,7 +2,7 @@ export default function UnitchartGridLayoutKey() {
   // CANVAS SETUP
   let margin = {
       top: 0.1,
-      right: 0,
+      right: 0.2,
       bottom: 0.1,
       left: 0,
     },
@@ -36,6 +36,8 @@ export default function UnitchartGridLayoutKey() {
       const data = aqData.orderby("id").objects();
 
       const idArray = Array.from(new Set(data.map((d) => d.id)));
+
+      // const keyArray = Array.from(new Set(data.map((d) => d.key)));
 
       const bin = Math.floor(Math.sqrt(idArray.length));
 
@@ -123,7 +125,7 @@ export default function UnitchartGridLayoutKey() {
 
       OE.join(
         function (enter) {
-          const rectEner = enter
+          let rectEner = enter
             .append("rect")
             .attr("class", (d, i) => `OErect id_${d.id}`)
             .attr("x", (d) => justedxValue2(d))
@@ -206,6 +208,12 @@ export default function UnitchartGridLayoutKey() {
   chart.bin = function (_) {
     if (!arguments.length) return bin;
     bin = _;
+    return chart;
+  };
+
+  chart.legend = function (_) {
+    if (!arguments.length) return legend;
+    legend = _;
     return chart;
   };
 

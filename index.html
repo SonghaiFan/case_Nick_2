@@ -4,7 +4,7 @@
     <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <meta charset="utf-8" />
-    <title>There-to-one scrollytelling data visualization demo</title>
+    <title>Three-to-one scrollytelling data visualization demo</title>
     <meta name="description" content="" />
     <meta name="author" content="Songhai Fan" />
 
@@ -41,16 +41,17 @@
     </div>
 
     <div class="chapter intro">
-      There-t●-one scrollytelling data visualization case study<br />
+      Three-t●-one scrollytelling data visualization case study<br />
       <h1>Talking about disadvantage <br />in public narratives</h1>
       <p>
         To examine how narratives about disadvantage are presented in the
         Australian media, a team of Monash University researchers analysed more
         than two hundred articles from 2020 and further explored whether these
         narratives differ across different types of disadvantaged groups, issues
-        and publishers. The dataset was first human-coded, which may help in
-        developing machine learning models to track public narratives using
-        artificial intelligence.
+        and publishers. The dataset was first human-coded – meaning that experts
+        analysed the articles to look for emerging themes, keywords and biases –
+        which may help in developing machine learning models to track public
+        narratives using artificial intelligence.
       </p>
       <br />
       <div class="scroll_indicator">
@@ -59,7 +60,35 @@
       </div>
     </div>
 
-    <!-- <div class="chapter"></div> -->
+    <div class="chapter">
+      <h1>How we collect data and where are they come from?</h1>
+      <p>
+        We searched the Factiva database of Australian news articles for
+        articles related to disadvantage. For example, this article contains key
+        words related to themes of disadvantage highlighted in different
+        colours.
+      </p>
+      <img
+        src="https://images.dowjones.com/wp-content/uploads/sites/3/2019/12/18104021/D-factiva-fixed-2.svg"
+        alt="Factiva database"
+      />
+      <ul>
+        <li>
+          We searched Factiva using the same set of terms that were developed
+          for the review (e.g. disadvantage* OR discrimination OR "access to
+          resources" …)
+        </li>
+        <li>
+          We included the most-read newspaper in every state and territory, plus
+          The Australian (top national newspaper), Daily Telegraph (second in
+          NSW) and Herald Sun (second in Vic)
+        </li>
+        <li>
+          We restricted the searches to Commentaries/Opinions Or Editorials
+          published in 2020.
+        </li>
+      </ul>
+    </div>
 
     <div class="scrolly side">
       <div class="figure" id="fig1">
@@ -67,12 +96,10 @@
         <p>0</p>
       </div>
       <div class="article">
-        <div class="step"></div>
         <div class="step">
           <p>
-            A square or rectangle represents one of our collection of aricles,
-            with consistent visual semantics through the following
-            visualization.
+            A white square represents one of our collection of aricles, with
+            consistent visual semantics through the following visualization.
           </p>
           <p>
             The color block represents the narrative disadvantage content of the
@@ -84,20 +111,10 @@
             Factiva search returned n=3845 documents that included that search
             terms.
           </p>
-          We searched Factiva using the same set of terms that were developed
-          for the review (e.g. disadvantage* OR discrimination OR "access to
-          resources" …)<br />
-
-          We included the most-read newspaper in every state and territory, plus
-          The Australian (top national newspaper), Daily Telegraph (second in
-          NSW) and Herald Sun (second in Vic)<br />
-
-          We restricted the searches to Commentaries/Opinions Or Editorials
-          published in 2020.
         </div>
         <div class="step">
           <p>
-            The top 1000 most 'Relecant' article were downloaded and randomised
+            The top 1000 most 'Relevant' article were downloaded and randomised
             for screening and coding.
           </p>
         </div>

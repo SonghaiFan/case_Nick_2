@@ -93,11 +93,46 @@ export default function SankeyChartDm() {
         }
       }
 
-      console.log(nodes);
+      const linksByPathGroupArray = Array.from(linksByPath.entries());
+
+      const leftNodeList = [
+        "firstnations",
+        "racialminorities",
+        "women",
+        "children",
+        "youngpeople",
+        "unemployedorprecariouslyemployed",
+        "peoplewithdisabilitiesorchronichealthconditions",
+      ];
+
       const nodeGroup = fl2.selectAll("g").data(nodes, (d) => d.name || d[0]);
 
       nodeGroup.join(
-        (enter) => enter,
+        (enter) =>
+          enter
+            .append("g")
+            .attr("class", (d) =>
+              d.x0 < width / 2
+                ? `nodeGroup sourceGroup ${d.name}`
+                : `nodeGroup targetGroup ${d.name}`
+            )
+            .call((enter) =>
+              enter
+                .append("rect")
+                .attr("id", (d) => d.name)
+                .attr("y", (d) => d.y0)
+                .attr("fill", (d) => colorScale(d.name))
+                .attr("height", (d) => d.y1 - d.y0)
+                .attr("opacity", 1)
+            )
+            .call((enter) => {
+              enter
+                .select("rect")
+                .transition()
+                .duration(750)
+                .attr("x", (d) => d.x0)
+                .attr("width", (d) => d.x1 - d.x0);
+            }),
         (update) =>
           update.call((update) =>
             update
@@ -110,7 +145,16 @@ export default function SankeyChartDm() {
               .attr("height", (d) => d.y1 - d.y0)
               .attr("fill", (d) => colorScale(d.name))
           ),
-        (exit) => exit.remove()
+        (exit) =>
+          exit.call((exit) =>
+            exit
+              .select("rect")
+              .transition()
+              .duration(200)
+              .attr("width", 0)
+              .filter((d) => d.x0 < width / 2)
+              .attr("x", (d) => d.x1)
+          )
       );
     });
   }
