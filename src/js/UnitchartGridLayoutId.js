@@ -84,16 +84,17 @@ export default function UnitchartGridLayoutId() {
             .append("rect")
             .attr("id", (d) => "rect" + d.id)
             .attr("stroke", "white")
-            .attr("fill", details ? "white" : "null")
+            .attr("fill", details ? "rgb(235, 224, 208)" : "null")
             .attr("x", (d) => justedxValue(d))
-            .attr("y", (d) => -2 * height)
+            // .attr("y", (d) => -2 * height)
+            .attr("y", (d) => justedyValue(d))
             .attr("height", sizeValue)
-            .attr("width", sizeValue);
+            .attr("width", sizeValue)
+            .style("opacity", 0);
           const rectEnterTransition = rectEner
             .transition()
             .duration(750)
-            .style("opacity", 1)
-            .attr("y", (d) => justedyValue(d));
+            .style("opacity", 1);
           return rectEnterTransition;
         },
         function (update) {
@@ -103,7 +104,7 @@ export default function UnitchartGridLayoutId() {
             .delay((d, i) => d.id)
             .attr("height", sizeValue)
             .attr("width", sizeValue)
-            .attr("fill", details ? "white" : "null")
+            .attr("fill", details ? "rgb(235, 224, 208)" : "null")
             .attr("x", (d) => justedxValue(d))
             .attr("y", (d) => justedyValue(d))
             .style("opacity", 1);
@@ -114,7 +115,8 @@ export default function UnitchartGridLayoutId() {
           const rectExitTransition = exit
             .transition()
             .duration(750)
-            .attr("y", (d) => -2 * height)
+            .style("opacity", 0)
+            // .attr("y", (d) => -2 * height)
             .remove();
 
           return rectExitTransition;
@@ -131,17 +133,14 @@ export default function UnitchartGridLayoutId() {
       if (details) {
         const lableText = (text) =>
           text
+            .replace("indigenous", '<span key="firstnations">indigenous</span>')
             .replace(
-              /indigenous/g,
-              '<span key="firstnations">indigenous</span>'
-            )
-            .replace(
-              /migrant/g,
+              "migrant",
               '<span key="migrantsandrefugees">migrant</span>'
             )
-            .replace(/women/g, '<span key="women">women</span>')
-            .replace(/domestic/g, '<span key="familyrelations">domestic</span>')
-            .replace(/violence/g, '<span key="violence">violence</span>');
+            .replace("women", '<span key="women">women</span>')
+            .replace("domestic", '<span key="familyrelations">domestic</span>')
+            .replace("violence", '<span key="violence">violence</span>');
 
         const istd = fl
           .selectAll("foreignObject")

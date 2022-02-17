@@ -85,13 +85,13 @@ export default function UnitchartGridLayoutKey() {
 
       const xScale2 = d3
         .scaleBand()
-        .domain(data2.map(xValue2))
+        .domain(data.map(xValue2))
         .range([0, sizeValue])
         .padding(0);
 
       const yScale2 = d3
         .scaleBand()
-        .domain(data2.map(yValue2))
+        .domain(data.map(yValue2))
         .range([0, sizeValue])
         .padding(0);
 
@@ -138,7 +138,7 @@ export default function UnitchartGridLayoutKey() {
           rectEner
             .transition()
             .duration(750)
-            .delay((d, i) => 750 + d.id * 10)
+            .delay((d, i) => 750 + d.id)
             .style("opacity", 1);
 
           return rectEner;

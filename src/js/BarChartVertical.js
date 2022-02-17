@@ -113,30 +113,32 @@ export default function BarChartVertical() {
         .on("mouseover", function (e, d) {
           let overKeyGroup = d[0];
 
-          let articleInGroup = dataMap.get(overKeyGroup)[0].ids;
-          console.log(articleInGroup);
+          if (overKeyGroup) {
+            let articleInGroup = dataMap.get(overKeyGroup)[0].ids;
+            console.log(articleInGroup);
 
-          fl.selectAll("rect").attr("fill", "black");
+            fl.selectAll("rect").attr("fill", "black");
 
-          articleInGroup.forEach(function (i) {
-            let articleRect = fl.select(`#rect${i}`);
-            articleRect.attr("fill", colorScale(overKeyGroup));
-          });
+            articleInGroup.forEach(function (i) {
+              let articleRect = fl.select(`#rect${i}`);
+              articleRect.attr("fill", colorScale(overKeyGroup));
+            });
 
-          let percentage = (articleInGroup.length / idArray.length) * 100;
+            let percentage = (articleInGroup.length / idArray.length) * 100;
 
-          al.selectAll("text")
-            .data([null])
-            .join("text")
-            .attr("x", 150)
-            .attr("y", 75)
-            .style("fill", "white")
-            .text(
-              (d) =>
-                `Code "${overKeyGroup}" included in ${
-                  articleInGroup.length
-                } articles(${parseFloat(percentage).toFixed(2)}%)`
-            );
+            al.selectAll("text")
+              .data([null])
+              .join("text")
+              .attr("x", 150)
+              .attr("y", 75)
+              .style("fill", "white")
+              .text(
+                (d) =>
+                  `Code "${overKeyGroup}" included in ${
+                    articleInGroup.length
+                  } articles(${parseFloat(percentage).toFixed(2)}%)`
+              );
+          }
         })
         .on("mouseout", function (e, d) {
           al.selectAll("*").remove();

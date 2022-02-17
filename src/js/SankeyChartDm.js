@@ -74,36 +74,10 @@ export default function SankeyChartDm() {
 
       const graph = { nodes: data_nodes, links: data_links };
 
-      const { nodes, links } = sankey({
+      const { nodes } = sankey({
         nodes: graph.nodes.map((d) => Object.assign({}, d)),
         links: graph.links.map((d) => Object.assign({}, d)),
       });
-
-      links.forEach((link) => {
-        link.path = link.source.name + "_" + link.target.name;
-      });
-
-      const linksByPath = new Map();
-
-      for (const link of links) {
-        if (!linksByPath.has(link.path)) {
-          linksByPath.set(link.path, [link]);
-        } else {
-          linksByPath.get(link.path).push(link);
-        }
-      }
-
-      const linksByPathGroupArray = Array.from(linksByPath.entries());
-
-      const leftNodeList = [
-        "firstnations",
-        "racialminorities",
-        "women",
-        "children",
-        "youngpeople",
-        "unemployedorprecariouslyemployed",
-        "peoplewithdisabilitiesorchronichealthconditions",
-      ];
 
       const nodeGroup = fl2.selectAll("g").data(nodes, (d) => d.name || d[0]);
 

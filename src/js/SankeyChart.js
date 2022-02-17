@@ -26,7 +26,8 @@ export default function SankeyChart() {
       const fl = container.select(".figureLayer"),
         fl2 = container.select(".figureLayer2"),
         fl3 = container.select(".figureLayer3"),
-        fl4 = container.select(".figureLayer4");
+        fl4 = container.select(".figureLayer4"),
+        al = container.select(".anotationLayer");
 
       fl3
         .transition()
@@ -65,6 +66,9 @@ export default function SankeyChart() {
         .select("id", "source", "target", "value");
 
       const data_links = aqData_gi.objects();
+
+      console.log(aqData.objects());
+      console.log(data_links);
 
       const sankey = d3
         .sankey()
@@ -120,7 +124,7 @@ export default function SankeyChart() {
         "peoplewithdisabilitiesorchronichealthconditions",
       ];
 
-      console.log(nodes);
+      console.log(linksByPath);
 
       const nodeGroup = fl4.selectAll("g").data(nodes, (d) => d.name);
 
@@ -146,7 +150,7 @@ export default function SankeyChart() {
                   leftNodeList.includes(d.name) ? d.x0 + 30 : d.x1 - 30
                 )
                 .attr("y", (d) => (d.y1 + d.y0) / 2)
-                .text((d) => d.name)
+                .text((d) => `${d.name}:${d.value}`)
             )
             .call((enter) =>
               enter.select("text").transition().duration(750).attr("opacity", 1)
@@ -165,6 +169,7 @@ export default function SankeyChart() {
               .attr("text-anchor", (d) =>
                 leftNodeList.includes(d.name) ? "start" : "end"
               )
+              .text((d) => `${d.name}:${d.value}`)
           ),
         (exit) =>
           exit
@@ -178,7 +183,30 @@ export default function SankeyChart() {
         .selectAll("g")
         .data(linksByPathGroupArray, (d) => d[0])
         .join("g")
-        .attr("class", (d) => `linksGroup ${d[0]}`);
+        .attr("class", (d) => `linksGroup ${d[0]}`)
+        .on("mouseover", function (e, d) {
+          let overKeyGroup = d[0];
+
+          let group = overKeyGroup.split("_")[0];
+          let issue = overKeyGroup.split("_")[1];
+
+          let articleInGroup = linksByPath.get(overKeyGroup);
+          console.log(articleInGroup.length);
+
+          al.selectAll("text")
+            .data([null])
+            .join("text")
+            .attr("x", 850)
+            .attr("y", 75)
+            .style("fill", "white")
+            .text(
+              (d) =>
+                `"${group}" is metioned with "${issue}" ${articleInGroup.length} times`
+            );
+        })
+        .on("mouseout", function (e, d) {
+          al.selectAll("*").remove();
+        });
 
       const linkGroup = linksGroups.selectAll("path").data(
         (d) => d[1],
@@ -254,7 +282,7 @@ export default function SankeyChart() {
           fl.selectAll("rect").attr("fill", "black");
         });
 
-      const node = fl4.selectAll("rect");
+      const node = fl2.selectAll("rect");
 
       node
         .on("mouseover", function (e, d) {
@@ -276,12 +304,13 @@ export default function SankeyChart() {
 
       rects
         .on("mouseover", function (e, d) {
-          console.log("over here");
           rects.attr("fill", "black");
           let overedRect = d3.select(this);
           overedRect.attr("fill", "white");
-          let overedId = overedRect.data()[0].id;
-          d3.selectAll(`.linkGroup.article${overedId}`)
+
+          let overedRectId = overedRect.attr("id").replace("rect", "article");
+          // console.log(overedRectId);
+          d3.selectAll(`.linkGroup.${overedRectId}`)
             .attr("stroke", "white")
             .attr("stroke-width", (d) => Math.max(5, d.width))
             .raise();
