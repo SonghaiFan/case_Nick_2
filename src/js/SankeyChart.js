@@ -31,7 +31,7 @@ export default function SankeyChart() {
 
       fl3
         .transition()
-        .duration(750)
+        .duration(1200)
         .style("opacity", 1)
         .attr(
           "transform",
@@ -40,7 +40,7 @@ export default function SankeyChart() {
 
       fl4
         .transition()
-        .duration(750)
+        .duration(1200)
         .style("opacity", 1)
         .attr(
           "transform",
@@ -153,14 +153,18 @@ export default function SankeyChart() {
                 .text((d) => `${d.name}:${d.value}`)
             )
             .call((enter) =>
-              enter.select("text").transition().duration(750).attr("opacity", 1)
+              enter
+                .select("text")
+                .transition()
+                .duration(1200)
+                .attr("opacity", 1)
             ),
         (update) =>
           update.call((update) =>
             update
               .select("text")
               .transition()
-              .duration(750)
+              .duration(1200)
               .attr("opacity", 1)
               .attr("y", (d) => (d.y1 + d.y0) / 2)
               .attr("x", (d) =>
@@ -224,17 +228,17 @@ export default function SankeyChart() {
             .call((enter) =>
               enter
                 .transition()
-                .duration(750)
+                .duration(1200)
                 .attr("stroke-width", (d) => Math.max(1, d.width))
                 .transition()
-                .duration(750)
+                .duration(1200)
                 .attr("stroke-dashoffset", 0)
             ),
         (update) =>
           update.call((update) =>
             update
               .transition()
-              .duration(750)
+              .duration(1200)
               .attr("d", d3.sankeyLinkHorizontal())
               .attr("stroke-dasharray", (d, i, n) => n[i].getTotalLength() * 2)
               .attr("stroke-width", (d) => Math.max(1, d.width))
@@ -268,25 +272,25 @@ export default function SankeyChart() {
 
           let articleInPath = linksByPath.get(overedPath);
 
-          fl.selectAll("rect").attr("fill", "black");
+          fl.selectAll("rect").attr("fill", "rgb(194, 183, 167)");
 
           articleInPath.forEach(function (i) {
             let articleRect = fl.select(`#rect${i.id}`);
-            articleRect.attr("fill", "gray");
+            articleRect.attr("fill", "rgb(235, 224, 208)");
           });
 
           fl.select(`#${overedRectId}`).attr("fill", "white");
         })
         .on("mouseout", function (e, d) {
           d3.select(this).attr("stroke-width", d.width);
-          fl.selectAll("rect").attr("fill", "black");
+          fl.selectAll("rect").attr("fill", "rgb(235, 224, 208)");
         });
 
       const node = fl2.selectAll("rect");
 
       node
         .on("mouseover", function (e, d) {
-          fl.selectAll("rect").attr("fill", "black");
+          fl.selectAll("rect").attr("fill", "rgb(235, 224, 208)");
           let articleInNode = d.sourceLinks.length
             ? d.sourceLinks
             : d.targetLinks;
@@ -297,14 +301,14 @@ export default function SankeyChart() {
           });
         })
         .on("mouseout", function (e, d) {
-          fl.selectAll("rect").attr("fill", "black");
+          fl.selectAll("rect").attr("fill", "rgb(235, 224, 208)");
         });
 
       const rects = fl.selectAll("rect").raise();
 
       rects
         .on("mouseover", function (e, d) {
-          rects.attr("fill", "black");
+          rects.attr("fill", "rgb(235, 224, 208)");
           let overedRect = d3.select(this);
           overedRect.attr("fill", "white");
 
@@ -316,7 +320,7 @@ export default function SankeyChart() {
             .raise();
         })
         .on("mouseout", function () {
-          rects.attr("fill", "black");
+          rects.attr("fill", "rgb(235, 224, 208)");
           d3.selectAll(".linkGroup")
             .attr("stroke", "gray")
             .attr("stroke-width", (d) => Math.max(1, d.width));

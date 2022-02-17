@@ -99,19 +99,25 @@ function stepTrigger(index) {
       fig1.datum(articleData.filter((d) => d.id == 1)).call(idUnitChart);
       break;
     case 3:
-      fig1.datum(hierarchyData.filter((d) => d.id < 16)).call(keyUnitChart);
       fig1
-        .datum(articleData.filter((d) => d.id < 16))
-        .call(idUnitChart.details(true));
+        .datum(
+          hierarchyData.filter((d) => d.id == 1 || d.id == 4 || d.id == 14)
+        )
+        .call(keyUnitChart.bin(3));
+      fig1
+        .datum(articleData.dedupe("publisher"))
+        .call(idUnitChart.details(true).bin(3));
       break;
     case 4:
       fig1.datum(hierarchyData).call(
-        keyUnitChart.margin({
-          top: 0.1,
-          right: 0,
-          bottom: 0.1,
-          left: 0,
-        })
+        keyUnitChart
+          .margin({
+            top: 0.1,
+            right: 0,
+            bottom: 0.1,
+            left: 0,
+          })
+          .bin(null)
       );
       fig1.datum(articleData).call(
         idUnitChart
@@ -122,13 +128,10 @@ function stepTrigger(index) {
             left: 0,
           })
           .details(false)
+          .bin(null)
       );
       break;
     case 5:
-      fig1.datum(articleData).call(idUnitChart.details(false));
-      fig1.datum(hierarchyData).call(keyUnitChart);
-      break;
-    case 6:
       fig1.datum(articleData).call(
         idUnitChart.margin({
           top: 0.1,
@@ -148,7 +151,7 @@ function stepTrigger(index) {
       fig1.select(".xAxisLayer").selectAll("*").remove();
       fig1.select(".yAxisLayer").selectAll("*").remove();
       break;
-    case 7:
+    case 6:
       fig1.datum(hierarchyData).call(
         keyBarChartStackedVertical.margin({
           top: 0.1,
@@ -160,7 +163,7 @@ function stepTrigger(index) {
       fig1.select(".figureLayer2").selectAll("*").remove();
       fig1.datum(articleData).call(idUnitChart);
       break;
-    case 8:
+    case 7:
       fig1.datum(hierarchyData).call(
         keyBarChartVertical.smooth(false).margin({
           top: 0.1,
@@ -180,7 +183,7 @@ function stepTrigger(index) {
       );
       fig1.datum(articleData).call(idUnitChart);
       break;
-    case 9:
+    case 8:
       fig1.datum(articleData25).call(idUnitChart);
       fig1.datum(hierarchyData25).call(
         keyUnitChart.margin({
@@ -192,24 +195,20 @@ function stepTrigger(index) {
       );
       fig1.datum(hierarchyData25).call(keyBarChartVertical.smooth(true));
       break;
-    case 10:
-      break;
-    case 11:
+    case 9:
       fig1
         .datum(hierarchyData25.filter((d) => d.group_or_issue == "group"))
         .call(keyBarChartVertical);
-
       break;
-    case 12:
+    case 10:
       fig1
         .datum(hierarchyData25.filter((d) => d.group_or_issue == "issue"))
         .call(keyBarChartVertical);
       break;
-    case 13:
+    case 11:
       fig1.datum(hierarchyData25).call(keyBarChartVertical);
-
       break;
-    case 14:
+    case 12:
       fig1.select(".figureLayer3").selectAll("*").remove();
       fig1.select(".figureLayer4").selectAll("*").remove();
       fig1.select(".xAxisLayer").selectAll("*").remove();
@@ -232,49 +231,50 @@ function stepTrigger(index) {
           left: 0.45,
         })
       );
-
       break;
-    case 15:
+    case 13:
       fig1.datum(articleData25.filter((d) => d.id == 1)).call(idUnitChart);
       fig1.datum(hierarchyData25.filter((d) => d.id == 1)).call(keyUnitChart);
       fig1.datum(hierarchyData25.filter((d) => d.id == 1)).call(aSankeyChartDm);
       fig1.datum(hierarchyData25.filter((d) => d.id == 1)).call(aSankeyChart);
       break;
-    case 16:
+    case 14:
       fig1.datum(articleData25.filter((d) => d.id <= 2)).call(idUnitChart);
       fig1.datum(hierarchyData25.filter((d) => d.id <= 2)).call(keyUnitChart);
       fig1.datum(hierarchyData25.filter((d) => d.id <= 2)).call(aSankeyChartDm);
       fig1.datum(hierarchyData25.filter((d) => d.id <= 2)).call(aSankeyChart);
       break;
-    case 17:
+    case 15:
       fig1.datum(articleData25.filter((d) => d.id <= 3)).call(idUnitChart);
       fig1.datum(hierarchyData25.filter((d) => d.id <= 3)).call(keyUnitChart);
       fig1.datum(hierarchyData25.filter((d) => d.id <= 3)).call(aSankeyChartDm);
       fig1.datum(hierarchyData25.filter((d) => d.id <= 3)).call(aSankeyChart);
       break;
-    case 18:
+    case 16:
       fig1.datum(hierarchyData25.filter((d) => d.id <= 4)).call(keyUnitChart);
       fig1.datum(hierarchyData25.filter((d) => d.id <= 4)).call(aSankeyChartDm);
       fig1.datum(articleData25.filter((d) => d.id <= 4)).call(idUnitChart);
       fig1.datum(hierarchyData25.filter((d) => d.id <= 4)).call(aSankeyChart);
       break;
-    case 19:
-      fig1.datum(hierarchyData25.filter((d) => d.id <= 5)).call(keyUnitChart);
-      fig1.datum(hierarchyData25.filter((d) => d.id <= 5)).call(aSankeyChartDm);
-      fig1.datum(articleData25.filter((d) => d.id <= 5)).call(idUnitChart);
-      fig1.datum(hierarchyData25.filter((d) => d.id <= 5)).call(aSankeyChart);
-      break;
-    case 20:
-      fig1.datum(hierarchyData25.filter((d) => d.id <= 6)).call(keyUnitChart);
-      fig1.datum(hierarchyData25.filter((d) => d.id <= 6)).call(aSankeyChartDm);
-      fig1.datum(articleData25.filter((d) => d.id <= 6)).call(idUnitChart);
-      fig1.datum(hierarchyData25.filter((d) => d.id <= 6)).call(aSankeyChart);
-      break;
-    case 21:
+    case 17:
       fig1.datum(hierarchyData25).call(keyUnitChart);
       fig1.datum(hierarchyData25).call(aSankeyChartDm);
       fig1.datum(articleData25).call(idUnitChart);
       fig1.datum(hierarchyData25).call(aSankeyChart);
+      break;
+    case 18:
+      fig1
+        .datum(hierarchyData25.filter((d) => d.key == "firstnations"))
+        .call(aSankeyChartDm);
+      fig1
+        .datum(hierarchyData25.filter((d) => d.key == "firstnations"))
+        .call(aSankeyChart);
+      break;
+    case 19:
+      break;
+    case 20:
+      break;
+    case 21:
       break;
     case 22:
       break;
@@ -285,11 +285,11 @@ function stepTrigger(index) {
 function handleResize() {
   // 1. update height of step elements
   const stepH = Math.floor(window.innerHeight * 0.75);
-  steps.style("min-height", stepH + "px");
+  steps.style("margin-bottom", stepH + "px");
   chapters.style("min-height", stepH + "px");
 
-  const figureHeight = window.innerHeight * 0.8;
-  const figureMarginTop = (window.innerHeight - figureHeight) / 3;
+  const figureHeight = window.innerHeight * 0.95;
+  const figureMarginTop = (window.innerHeight - figureHeight) / 4;
 
   figures
     .style("height", figureHeight + "px")
@@ -368,7 +368,7 @@ function init() {
 
   scroller.setup({
     step: ":is(.chapter,.step)",
-    offset: 0.6,
+    offset: 0.7,
     debug: false,
   });
 

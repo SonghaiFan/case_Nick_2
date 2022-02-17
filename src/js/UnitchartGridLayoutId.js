@@ -2,7 +2,7 @@ export default function UnitchartGridLayoutId() {
   // CANVAS SETUP
   let margin = {
       top: 0.1,
-      right: 0.2,
+      right: 0,
       bottom: 0.1,
       left: 0,
     },
@@ -27,7 +27,7 @@ export default function UnitchartGridLayoutId() {
       const tooltip = d3.select("#tooltipContainer");
 
       fl.transition()
-        .duration(750)
+        .duration(1200)
         .style("opacity", 1)
         .attr(
           "transform",
@@ -38,7 +38,7 @@ export default function UnitchartGridLayoutId() {
 
       const idArray = Array.from(new Set(data.map((d) => d.id)));
 
-      const bin = Math.floor(Math.sqrt(idArray.length));
+      bin = bin || Math.floor(Math.sqrt(idArray.length));
 
       const xValue = (d) => idArray.indexOf(d.id) % bin;
 
@@ -84,7 +84,8 @@ export default function UnitchartGridLayoutId() {
             .append("rect")
             .attr("id", (d) => "rect" + d.id)
             .attr("stroke", "white")
-            .attr("fill", details ? "rgb(235, 224, 208)" : "null")
+            .attr("stroke-width", 1)
+            .attr("fill", "rgb(235, 224, 208)")
             .attr("x", (d) => justedxValue(d))
             // .attr("y", (d) => -2 * height)
             .attr("y", (d) => justedyValue(d))
@@ -93,18 +94,18 @@ export default function UnitchartGridLayoutId() {
             .style("opacity", 0);
           const rectEnterTransition = rectEner
             .transition()
-            .duration(750)
+            .duration(1200)
             .style("opacity", 1);
           return rectEnterTransition;
         },
         function (update) {
           const rectUpdateTransition = update
             .transition()
-            .duration(details ? 1500 : 750)
+            .duration(details ? 1500 : 1200)
             .delay((d, i) => d.id)
             .attr("height", sizeValue)
             .attr("width", sizeValue)
-            .attr("fill", details ? "rgb(235, 224, 208)" : "null")
+            .attr("fill", "rgb(235, 224, 208)")
             .attr("x", (d) => justedxValue(d))
             .attr("y", (d) => justedyValue(d))
             .style("opacity", 1);
@@ -114,7 +115,7 @@ export default function UnitchartGridLayoutId() {
         function (exit) {
           const rectExitTransition = exit
             .transition()
-            .duration(750)
+            .duration(1200)
             .style("opacity", 0)
             // .attr("y", (d) => -2 * height)
             .remove();
@@ -125,7 +126,7 @@ export default function UnitchartGridLayoutId() {
 
       fl.selectAll("foreignObject")
         .transition()
-        .duration(750)
+        .duration(1200)
         .style("opacity", 0)
         .end()
         .then(fl.selectAll("foreignObject").remove().remove());
@@ -153,6 +154,7 @@ export default function UnitchartGridLayoutId() {
           .style("opacity", 0)
           .append("xhtml:div")
           .attr("class", "in_svg_text_div")
+          .style("padding-top", "1em")
           .style("font-size", `${sizeValue / 25}px`)
           .html(
             (d) =>
@@ -169,8 +171,8 @@ export default function UnitchartGridLayoutId() {
 
         fl.selectAll("foreignObject")
           .transition()
-          .duration(750)
-          .delay(750)
+          .duration(1200)
+          .delay(1200)
           .style("opacity", 1);
       }
 
@@ -195,10 +197,10 @@ export default function UnitchartGridLayoutId() {
           })
           .on("click", function (e, d) {
             let stroke_status = d3.select(this).attr("stroke");
-            d3.select(this).attr(
-              "stroke",
-              stroke_status == "white" ? "red" : "white"
-            );
+            let stroke_width = d3.select(this).attr("stroke-width");
+            d3.select(this)
+              // .attr("stroke", stroke_status == "white" ? "red" : "white")
+              .attr("stroke-width", stroke_width == 1 ? 3 : 1);
           });
       }
     });

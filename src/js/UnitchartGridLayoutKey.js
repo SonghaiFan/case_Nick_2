@@ -2,7 +2,7 @@ export default function UnitchartGridLayoutKey() {
   // CANVAS SETUP
   let margin = {
       top: 0.1,
-      right: 0.2,
+      right: 0,
       bottom: 0.1,
       left: 0,
     },
@@ -26,7 +26,7 @@ export default function UnitchartGridLayoutKey() {
 
       fl1
         .transition()
-        .duration(750)
+        .duration(1200)
         .style("opacity", 1)
         .attr(
           "transform",
@@ -39,7 +39,7 @@ export default function UnitchartGridLayoutKey() {
 
       // const keyArray = Array.from(new Set(data.map((d) => d.key)));
 
-      const bin = Math.floor(Math.sqrt(idArray.length));
+      bin = bin || Math.floor(Math.sqrt(idArray.length));
 
       const xValue = (d) => idArray.indexOf(d.id) % bin;
 
@@ -128,6 +128,7 @@ export default function UnitchartGridLayoutKey() {
           let rectEner = enter
             .append("rect")
             .attr("class", (d, i) => `OErect id_${d.id}`)
+            // .style("mix-blend-mode", "hard-light")
             .attr("x", (d) => justedxValue2(d))
             .attr("y", (d) => justedyValue2(d))
             .attr("height", Math.min(25, yScale2.bandwidth()))
@@ -137,8 +138,8 @@ export default function UnitchartGridLayoutKey() {
 
           rectEner
             .transition()
-            .duration(750)
-            .delay((d, i) => 750 + d.id)
+            .duration(1200)
+            .delay((d, i) => 1200 + d.id)
             .style("opacity", 1);
 
           return rectEner;
@@ -146,7 +147,7 @@ export default function UnitchartGridLayoutKey() {
         function (update) {
           return update
             .transition()
-            .duration(750)
+            .duration(1200)
             .delay((d, i) => d.id)
             .attr("x", (d) => justedxValue2(d))
             .attr("y", (d) => justedyValue2(d))
@@ -159,7 +160,7 @@ export default function UnitchartGridLayoutKey() {
           return exit.call((exit) =>
             exit
               .transition()
-              .duration(750)
+              .duration(1200)
               .attr("y", (d) => -2 * height)
               .style("opacity", 0)
               .remove()

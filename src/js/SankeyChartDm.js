@@ -24,7 +24,7 @@ export default function SankeyChartDm() {
 
       fl2
         .transition()
-        .duration(750)
+        .duration(1200)
         .style("opacity", 1)
         .attr(
           "transform",
@@ -104,7 +104,7 @@ export default function SankeyChartDm() {
               enter
                 .select("rect")
                 .transition()
-                .duration(750)
+                .duration(1200)
                 .attr("y", (d) => d.y0)
                 .attr("height", (d) => d.y1 - d.y0);
             }),
@@ -113,7 +113,7 @@ export default function SankeyChartDm() {
             update
               .select("rect")
               .transition()
-              .duration(750)
+              .duration(1200)
               .attr("x", (d) => d.x0)
               .attr("y", (d) => d.y0)
               .attr("width", (d) => d.x1 - d.x0)

@@ -29,11 +29,11 @@ export default function BarChartVertical() {
         xl = container.select(".xAxisLayer"),
         yl = container.select(".yAxisLayer");
 
-      al.transition().duration(750).style("opacity", 1);
+      al.transition().duration(1200).style("opacity", 1);
 
       fl2
         .transition()
-        .duration(smooth ? 750 : 0)
+        .duration(smooth ? 1200 : 0)
         .style("opacity", 1)
         .attr(
           "transform",
@@ -78,7 +78,7 @@ export default function BarChartVertical() {
         .range(color_range);
 
       xl.transition()
-        .duration(750)
+        .duration(1200)
         .style("opacity", 1)
         .call(d3.axisBottom(xScale))
         .attr(
@@ -87,7 +87,7 @@ export default function BarChartVertical() {
         );
 
       yl.transition()
-        .duration(750)
+        .duration(1200)
         .style("opacity", 1)
         .call(d3.axisLeft(yScale))
         .call(function (g) {
@@ -115,12 +115,12 @@ export default function BarChartVertical() {
 
           if (overKeyGroup) {
             let articleInGroup = dataMap.get(overKeyGroup)[0].ids;
-            console.log(articleInGroup);
 
-            fl.selectAll("rect").attr("fill", "black");
+            fl.selectAll("rect").attr("fill", "rgb(235, 224, 208)");
 
             articleInGroup.forEach(function (i) {
               let articleRect = fl.select(`#rect${i}`);
+
               articleRect.attr("fill", colorScale(overKeyGroup));
             });
 
@@ -142,7 +142,7 @@ export default function BarChartVertical() {
         })
         .on("mouseout", function (e, d) {
           al.selectAll("*").remove();
-          fl.selectAll("rect").attr("fill", "black");
+          fl.selectAll("rect").attr("fill", "rgb(235, 224, 208)");
         });
 
       const OE = OEg.selectAll("rect").data((d) => d[1]);
@@ -160,19 +160,19 @@ export default function BarChartVertical() {
               enter
 
                 .transition()
-                .duration(smooth ? 750 : 0)
+                .duration(smooth ? 1200 : 0)
                 .attr("width", (d) => xScale(d.value_sum) - xScale(0))
             ),
         (update) =>
           update.call((update) =>
             update
               .transition()
-              .duration(750)
+              .duration(1200)
               .attr("fill", (d) => colorScale(d[groupKey]))
               .attr("y", (d) => yScale(d[groupKey]))
               .attr("height", yScale.bandwidth())
               // .transition()
-              // .duration(750)
+              // .duration(1200)
               .attr("x", (d) => xScale(0))
               .attr("width", (d) => xScale(d.value_sum) - xScale(0))
           ),
@@ -180,7 +180,7 @@ export default function BarChartVertical() {
           exit.call((exit) =>
             exit
               .transition()
-              .duration(750)
+              .duration(1200)
               .attr("height", 0)
               .attr("y", height)
               .remove()

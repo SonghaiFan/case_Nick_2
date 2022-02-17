@@ -29,7 +29,7 @@ export default function BarChartStackedVertical() {
 
       fl1
         .transition()
-        .duration(750)
+        .duration(1200)
         .style("opacity", 1)
         .attr(
           "transform",
@@ -74,7 +74,7 @@ export default function BarChartStackedVertical() {
         .range(color_range);
 
       xl.transition()
-        .duration(750)
+        .duration(1200)
         .style("opacity", 1)
         .call(d3.axisBottom(xScale))
         .attr(
@@ -83,7 +83,7 @@ export default function BarChartStackedVertical() {
         );
 
       yl.transition()
-        .duration(750)
+        .duration(1200)
         .style("opacity", 1)
         .call(d3.axisLeft(yScale))
         .call(function (g) {
@@ -120,8 +120,8 @@ export default function BarChartStackedVertical() {
 
           rectEner
             .transition()
-            .duration(smooth ? 750 : 0)
-            .delay(smooth ? 750 : 0)
+            .duration(smooth ? 1200 : 0)
+            .delay(smooth ? 1200 : 0)
             .attr("x", (d) => xScale(d.value_stackmin))
             .attr("width", (d) => xScale(d.value_stackmax - d.value_stackmin))
             .style("opacity", 1);
@@ -132,7 +132,7 @@ export default function BarChartStackedVertical() {
           return update
             .style("opacity", 1)
             .transition()
-            .duration(750)
+            .duration(1200)
             .delay(
               (d, i) =>
                 (keyArray.length - keyArray.indexOf(d[groupKey])) * 50 + i * 1
@@ -146,7 +146,7 @@ export default function BarChartStackedVertical() {
         },
         function (exit) {
           return exit.call((exit) =>
-            exit.transition().duration(750).style("opacity", 0).remove()
+            exit.transition().duration(1200).style("opacity", 0).remove()
           );
         }
       );
