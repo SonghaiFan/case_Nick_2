@@ -284,7 +284,7 @@ function stepTrigger(index) {
 // generic window resize listener event
 function handleResize() {
   // 1. update height of step elements
-  const stepH = Math.floor(window.innerHeight * 0.75);
+  const stepH = Math.floor(window.innerHeight * 0.85);
   steps.style("margin-bottom", stepH + "px");
   chapters.style("min-height", stepH + "px");
 
@@ -368,7 +368,7 @@ function init() {
 
   scroller.setup({
     step: ":is(.chapter,.step)",
-    offset: 0.7,
+    offset: 0.3,
     debug: false,
   });
 

@@ -129,7 +129,7 @@ export default function BarChartVertical() {
             al.selectAll("text")
               .data([null])
               .join("text")
-              .attr("x", 150)
+              .attr("x", 200)
               .attr("y", 75)
               .style("fill", "white")
               .text(
