@@ -120,9 +120,10 @@ export default function SankeyChartDm() {
               enter
                 .append("rect")
                 .attr("id", (d) => d.name)
-                .attr("y", (d) => d.y0)
                 .attr("fill", (d) => colorScale(d.name))
-                .attr("height", (d) => d.y1 - d.y0)
+                .attr("x", (d) => d.x0)
+                .attr("y", (d) => d.y0)
+                .attr("width", (d) => d.x1 - d.x0)
                 .attr("opacity", 1)
             )
             .call((enter) => {
@@ -130,8 +131,8 @@ export default function SankeyChartDm() {
                 .select("rect")
                 .transition()
                 .duration(750)
-                .attr("x", (d) => d.x0)
-                .attr("width", (d) => d.x1 - d.x0);
+                .attr("y", (d) => d.y0)
+                .attr("height", (d) => d.y1 - d.y0);
             }),
         (update) =>
           update.call((update) =>
@@ -147,13 +148,7 @@ export default function SankeyChartDm() {
           ),
         (exit) =>
           exit.call((exit) =>
-            exit
-              .select("rect")
-              .transition()
-              .duration(200)
-              .attr("width", 0)
-              .filter((d) => d.x0 < width / 2)
-              .attr("x", (d) => d.x1)
+            exit.select("rect").transition().duration(200).attr("height", 0)
           )
       );
     });
