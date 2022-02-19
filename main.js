@@ -368,7 +368,7 @@ function init() {
 
   scroller.setup({
     step: ":is(.chapter,.step)",
-    offset: 0.3,
+    offset: 0.5,
     debug: false,
   });
 

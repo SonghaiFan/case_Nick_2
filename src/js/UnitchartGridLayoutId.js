@@ -141,6 +141,7 @@ export default function UnitchartGridLayoutId() {
             )
             .replace("women", '<span key="women">women</span>')
             .replace("domestic", '<span key="familyrelations">domestic</span>')
+            .replace("equality", '<span key="inequality">equality</span>')
             .replace("violence", '<span key="violence">violence</span>');
 
         const istd = fl
