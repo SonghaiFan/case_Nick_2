@@ -10,7 +10,8 @@ export default function UnitchartGridLayoutKey() {
     color_domain,
     color_range,
     pad = 0.1,
-    bin;
+    bin,
+    lite = false;
 
   function chart(selection) {
     selection.each(function (aqData) {
@@ -112,61 +113,94 @@ export default function UnitchartGridLayoutKey() {
 
       // RENDER
 
-      const OEg = fl1
-        .selectAll("g")
-        .data(data2, (d) => d[0])
-        .join("g")
-        .attr("class", (d) => `OEg key_${d[0]}`);
+      // const OEg = fl1
+      //   .selectAll("g")
+      //   .data(data2, (d) => d[0])
+      //   .join("g")
+      //   .attr("class", (d) => `OEg key_${d[0]}`);
 
-      const OE = OEg.selectAll("rect").data(
-        (d) => d[1],
-        (d) => d.id
-      );
+      const OE = fl1.selectAll("rect").data(data, (d) => d.id + d.key);
 
-      OE.join(
-        function (enter) {
-          let rectEner = enter
-            .append("rect")
-            .attr("class", (d, i) => `OErect id_${d.id}`)
-            // .style("mix-blend-mode", "hard-light")
-            .attr("x", (d) => justedxValue2(d))
-            .attr("y", (d) => justedyValue2(d))
-            .attr("height", Math.min(25, yScale2.bandwidth()))
-            .attr("width", Math.min(100, xScale2.bandwidth()))
-            .style("opacity", 0)
-            .attr("fill", (d) => colorScale(d[groupKey]));
+      if (lite) {
+        OE.join(
+          function (enter) {
+            let rectEner = enter
+              .append("rect")
+              .attr("class", (d, i) => `OErect id_${d.id}`)
+              .attr("x", (d) => justedxValue2(d))
+              .attr("y", (d) => justedyValue2(d))
+              .attr("height", Math.min(25, yScale2.bandwidth()))
+              .attr("width", Math.min(100, xScale2.bandwidth()))
+              .style("opacity", 0)
+              .attr("fill", (d) => colorScale(d[groupKey]));
 
-          rectEner
-            .transition()
-            .duration(1200)
-            .delay((d, i) => 1200 + d.id)
-            .style("opacity", 1);
-
-          return rectEner;
-        },
-        function (update) {
-          return update
-            .transition()
-            .duration(1200)
-            .delay((d, i) => d.id)
-            .attr("x", (d) => justedxValue2(d))
-            .attr("y", (d) => justedyValue2(d))
-            .attr("height", Math.min(25, yScale2.bandwidth()))
-            .attr("width", Math.min(100, xScale2.bandwidth()))
-            .style("opacity", 1)
-            .attr("fill", (d) => colorScale(d[groupKey]));
-        },
-        function (exit) {
-          return exit.call((exit) =>
-            exit
+            rectEner
               .transition()
               .duration(1200)
-              .attr("y", (d) => -2 * height)
+              .delay((d, i) => 1200 + d.id)
+              .style("opacity", 1);
+
+            return rectEner;
+          },
+          function (update) {
+            return update
+              .transition()
+              .duration(1200)
+              .delay((d, i) => d.id)
+              .style("opacity", 1);
+          },
+          function (exit) {
+            return exit.call((exit) =>
+              exit.transition().duration(1200).style("opacity", 0)
+            );
+          }
+        );
+      } else {
+        OE.join(
+          function (enter) {
+            let rectEner = enter
+              .append("rect")
+              .attr("class", (d, i) => `OErect id_${d.id}`)
+              // .style("mix-blend-mode", "hard-light")
+              .attr("x", (d) => justedxValue2(d))
+              .attr("y", (d) => justedyValue2(d))
+              .attr("height", Math.min(25, yScale2.bandwidth()))
+              .attr("width", Math.min(100, xScale2.bandwidth()))
               .style("opacity", 0)
-              .remove()
-          );
-        }
-      );
+              .attr("fill", (d) => colorScale(d[groupKey]));
+
+            rectEner
+              .transition()
+              .duration(1200)
+              .delay((d, i) => 1200 + d.id)
+              .style("opacity", 1);
+
+            return rectEner;
+          },
+          function (update) {
+            return update
+              .transition()
+              .duration(1200)
+              .delay((d, i) => d.id)
+              .attr("x", (d) => justedxValue2(d))
+              .attr("y", (d) => justedyValue2(d))
+              .attr("height", Math.min(25, yScale2.bandwidth()))
+              .attr("width", Math.min(100, xScale2.bandwidth()))
+              .style("opacity", 1)
+              .attr("fill", (d) => colorScale(d[groupKey]));
+          },
+          function (exit) {
+            return exit.call((exit) =>
+              exit
+                .transition()
+                .duration(1200)
+                .attr("y", (d) => -2 * height)
+                .style("opacity", 0)
+                .remove()
+            );
+          }
+        );
+      }
     });
   }
 
@@ -215,6 +249,12 @@ export default function UnitchartGridLayoutKey() {
   chart.legend = function (_) {
     if (!arguments.length) return legend;
     legend = _;
+    return chart;
+  };
+
+  chart.lite = function (_) {
+    if (!arguments.length) return lite;
+    lite = _;
     return chart;
   };
 

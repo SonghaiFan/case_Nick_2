@@ -10,7 +10,8 @@ export default function UnitchartGridLayoutId() {
     color_range,
     pad = 0.1,
     details = true,
-    bin;
+    bin,
+    lite = false;
 
   function chart(selection) {
     selection.each(function (aqData) {
@@ -78,51 +79,91 @@ export default function UnitchartGridLayoutId() {
 
       const rect = fl.selectAll("rect").data(data, (d) => d.id);
 
-      rect.join(
-        function (enter) {
-          const rectEner = enter
-            .append("rect")
-            .attr("id", (d) => "rect" + d.id)
-            .attr("stroke", "white")
-            .attr("stroke-width", 1)
-            .attr("fill", "rgb(235, 224, 208)")
-            .attr("x", (d) => justedxValue(d))
-            // .attr("y", (d) => -2 * height)
-            .attr("y", (d) => justedyValue(d))
-            .attr("height", sizeValue)
-            .attr("width", sizeValue)
-            .style("opacity", 0);
-          const rectEnterTransition = rectEner
-            .transition()
-            .duration(1200)
-            .style("opacity", 1);
-          return rectEnterTransition;
-        },
-        function (update) {
-          const rectUpdateTransition = update
-            .transition()
-            .duration(details ? 1500 : 1200)
-            .delay((d, i) => d.id)
-            .attr("height", sizeValue)
-            .attr("width", sizeValue)
-            .attr("fill", "rgb(235, 224, 208)")
-            .attr("x", (d) => justedxValue(d))
-            .attr("y", (d) => justedyValue(d))
-            .style("opacity", 1);
+      if (lite) {
+        rect.join(
+          function (enter) {
+            const rectEner = enter
+              .append("rect")
+              .attr("id", (d) => "rect" + d.id)
+              .attr("stroke", "white")
+              .attr("stroke-width", 1)
+              .attr("fill", "rgb(235, 224, 208)")
+              .attr("x", (d) => justedxValue(d))
+              .attr("y", (d) => justedyValue(d))
+              .attr("height", sizeValue)
+              .attr("width", sizeValue)
+              .style("opacity", 0);
+            const rectEnterTransition = rectEner
+              .transition()
+              .duration(1200)
+              .style("opacity", 1);
+            return rectEnterTransition;
+          },
+          function (update) {
+            const rectUpdateTransition = update
+              .transition()
+              .duration(details ? 1500 : 1200)
+              .delay((d, i) => d.id)
+              .style("opacity", 1);
 
-          return rectUpdateTransition;
-        },
-        function (exit) {
-          const rectExitTransition = exit
-            .transition()
-            .duration(1200)
-            .style("opacity", 0)
-            // .attr("y", (d) => -2 * height)
-            .remove();
+            return rectUpdateTransition;
+          },
+          function (exit) {
+            const rectExitTransition = exit
+              .transition()
+              .duration(1200)
+              .style("opacity", 0);
 
-          return rectExitTransition;
-        }
-      );
+            return rectExitTransition;
+          }
+        );
+      } else {
+        rect.join(
+          function (enter) {
+            const rectEner = enter
+              .append("rect")
+              .attr("id", (d) => "rect" + d.id)
+              .attr("stroke", "white")
+              .attr("stroke-width", 1)
+              .attr("fill", "rgb(235, 224, 208)")
+              .attr("x", (d) => justedxValue(d))
+              // .attr("y", (d) => -2 * height)
+              .attr("y", (d) => justedyValue(d))
+              .attr("height", sizeValue)
+              .attr("width", sizeValue)
+              .style("opacity", 0);
+            const rectEnterTransition = rectEner
+              .transition()
+              .duration(1200)
+              .style("opacity", 1);
+            return rectEnterTransition;
+          },
+          function (update) {
+            const rectUpdateTransition = update
+              .transition()
+              .duration(details ? 1500 : 1200)
+              .delay((d, i) => d.id)
+              .attr("height", sizeValue)
+              .attr("width", sizeValue)
+              .attr("fill", "rgb(235, 224, 208)")
+              .attr("x", (d) => justedxValue(d))
+              .attr("y", (d) => justedyValue(d))
+              .style("opacity", 1);
+
+            return rectUpdateTransition;
+          },
+          function (exit) {
+            const rectExitTransition = exit
+              .transition()
+              .duration(1200)
+              .style("opacity", 0)
+              // .attr("y", (d) => -2 * height)
+              .remove();
+
+            return rectExitTransition;
+          }
+        );
+      }
 
       fl.selectAll("foreignObject")
         .transition()
@@ -240,6 +281,12 @@ export default function UnitchartGridLayoutId() {
   chart.details = function (_) {
     if (!arguments.length) return details;
     details = _;
+    return chart;
+  };
+
+  chart.lite = function (_) {
+    if (!arguments.length) return lite;
+    lite = _;
     return chart;
   };
 

@@ -2,10 +2,8 @@ import UnitchartGridLayoutKey from "./src/js/UnitchartGridLayoutKey.js";
 import UnitchartGridLayoutId from "./src/js/UnitchartGridLayoutId.js";
 import BarChartStackedVertical from "./src/js/BarChartStackedVertical.js";
 import BarChartVertical from "./src/js/BarChartVertical.js";
-// import BarChartVerticalCo from "./src/js/BarChartVerticalCo.js";
 import SankeyChart from "./src/js/SankeyChart.js";
 import SankeyChartDm from "./src/js/SankeyChartDm.js";
-// import SankeyChartHiden from "./src/js/SankeyChartHiden.js";
 
 const figures = d3.selectAll(".figure");
 const fig1 = d3.select("#fig1");
@@ -233,8 +231,12 @@ function stepTrigger(index) {
       );
       break;
     case 13:
-      fig1.datum(articleData25.filter((d) => d.id == 1)).call(idUnitChart);
-      fig1.datum(hierarchyData25.filter((d) => d.id == 1)).call(keyUnitChart);
+      fig1
+        .datum(articleData25.filter((d) => d.id == 1))
+        .call(idUnitChart.lite(true));
+      fig1
+        .datum(hierarchyData25.filter((d) => d.id == 1))
+        .call(keyUnitChart.lite(true));
       fig1.datum(hierarchyData25.filter((d) => d.id == 1)).call(aSankeyChartDm);
       fig1.datum(hierarchyData25.filter((d) => d.id == 1)).call(aSankeyChart);
       break;
