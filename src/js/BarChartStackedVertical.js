@@ -38,21 +38,22 @@ export default function BarChartStackedVertical() {
 
       const groupKey = "key";
 
+      // const data = aqData
+      //   .groupby(groupKey)
+      //   .rollup({ value_sum: (d) => op.sum(d.value) })
+      //   .orderby("value_sum")
+      //   .objects();
+
       const data = aqData
-        .groupby(groupKey)
-        .rollup({ value_sum: (d) => op.sum(d.value) })
-        .orderby("value_sum")
-        .objects();
-
-      const keyArray = Array.from(new Set(data.map((d) => d[groupKey])));
-
-      const data2 = aqData
         .groupby(groupKey)
         .derive({ value_sum: (d) => op.sum(d.value) })
         .derive({ value_stackmax: aq.rolling((d) => op.sum(d.value)) })
         .derive({ value_stackmin: (d) => op.lag(d.value_stackmax, 1, 0) })
-        // .orderby(aq.desc("value_sum"))
-        .objects({ grouped: "entries" });
+        .orderby("value_sum")
+        // .objects({ grouped: "entries" });
+        .objects();
+
+      const keyArray = Array.from(new Set(data.map((d) => d[groupKey])));
 
       const xScale = d3
         .scaleLinear()
@@ -97,16 +98,18 @@ export default function BarChartStackedVertical() {
 
       // RENDER
 
-      const OEg = fl1
-        .selectAll("g")
-        .data(data2, (d) => d[0])
-        .join("g")
-        .attr("class", (d) => `OEg key_${d[0]}`);
+      // const OEg = fl1
+      //   .selectAll("g")
+      //   .data(data2, (d) => d[0])
+      //   .join("g")
+      //   .attr("class", (d) => `OEg key_${d[0]}`);
 
-      const OE = OEg.selectAll("rect").data(
-        (d) => d[1],
-        (d) => d.id
-      );
+      // const OE = OEg.selectAll("rect").data(
+      //   (d) => d[1],
+      //   (d) => d.id + d.key
+      // );
+
+      const OE = fl1.selectAll("rect").data(data, (d) => d.id + d.key);
 
       OE.join(
         function (enter) {
