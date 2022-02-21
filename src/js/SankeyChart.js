@@ -272,7 +272,7 @@ export default function SankeyChart() {
 
           let articleInPath = linksByPath.get(overedPath);
 
-          fl.selectAll("rect").attr("fill", "rgb(194, 183, 167)");
+          fl.selectAll("rect").attr("fill", "black");
 
           articleInPath.forEach(function (i) {
             let articleRect = fl.select(`#rect${i.id}`);
