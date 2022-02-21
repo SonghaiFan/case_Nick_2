@@ -231,12 +231,8 @@ function stepTrigger(index) {
       );
       break;
     case 13:
-      fig1
-        .datum(articleData25.filter((d) => d.id == 1))
-        .call(idUnitChart.lite(true));
-      fig1
-        .datum(hierarchyData25.filter((d) => d.id == 1))
-        .call(keyUnitChart.lite(true));
+      fig1.datum(articleData25.filter((d) => d.id == 1)).call(idUnitChart);
+      fig1.datum(hierarchyData25.filter((d) => d.id == 1)).call(keyUnitChart);
       fig1.datum(hierarchyData25.filter((d) => d.id == 1)).call(aSankeyChartDm);
       fig1.datum(hierarchyData25.filter((d) => d.id == 1)).call(aSankeyChart);
       break;

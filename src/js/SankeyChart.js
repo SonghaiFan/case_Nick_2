@@ -290,14 +290,17 @@ export default function SankeyChart() {
 
       node
         .on("mouseover", function (e, d) {
-          fl.selectAll("rect").attr("fill", "rgb(235, 224, 208)");
           let articleInNode = d.sourceLinks.length
             ? d.sourceLinks
             : d.targetLinks;
 
+          let key = d.name;
+
+          console.log(articleInNode);
+
           articleInNode.forEach(function (i) {
             let articleRect = fl.select(`#rect${i.id}`);
-            articleRect.attr("fill", colorScale(d.name));
+            articleRect.attr("fill", colorScale(key));
           });
         })
         .on("mouseout", function (e, d) {
