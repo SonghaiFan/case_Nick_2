@@ -255,6 +255,10 @@ function stepTrigger(index) {
       fig1
         .datum(hierarchyData25.filter((d) => d.id == 1))
         .call(aSankeyChartLink.lite(true));
+      d3.selectAll(".article1")
+        .transition()
+        .duration(1200)
+        .attr("stroke-dashoffset", 0);
       break;
     case 14:
       fig1.datum(articleData25.filter((d) => d.id <= 2)).call(idUnitChart);
@@ -265,6 +269,10 @@ function stepTrigger(index) {
       fig1
         .datum(hierarchyData25.filter((d) => d.id <= 2))
         .call(aSankeyChartLink);
+      d3.selectAll(".article2")
+        .transition()
+        .duration(1200)
+        .attr("stroke-dashoffset", 0);
       break;
     case 15:
       fig1.datum(articleData25.filter((d) => d.id <= 3)).call(idUnitChart);
@@ -275,6 +283,10 @@ function stepTrigger(index) {
       fig1
         .datum(hierarchyData25.filter((d) => d.id <= 3))
         .call(aSankeyChartLink);
+      d3.selectAll(".article3")
+        .transition()
+        .duration(1200)
+        .attr("stroke-dashoffset", 0);
       break;
     case 16:
       fig1.datum(hierarchyData25.filter((d) => d.id <= 4)).call(keyUnitChart);
@@ -285,12 +297,21 @@ function stepTrigger(index) {
       fig1
         .datum(hierarchyData25.filter((d) => d.id <= 4))
         .call(aSankeyChartLink);
+      d3.selectAll(".article4")
+        .transition()
+        .duration(1200)
+        .attr("stroke-dashoffset", 0);
       break;
     case 17:
       fig1.datum(hierarchyData25).call(keyUnitChart);
       fig1.datum(articleData25).call(idUnitChart);
       fig1.datum(hierarchyData25).call(aSankeyChartText);
       fig1.datum(hierarchyData25).call(aSankeyChartLink);
+      d3.selectAll(".linksGroup")
+        .selectAll("path")
+        .transition()
+        .duration(1200)
+        .attr("stroke-dashoffset", 0);
       break;
     case 18:
       break;

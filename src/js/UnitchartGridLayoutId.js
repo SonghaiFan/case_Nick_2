@@ -82,23 +82,7 @@ export default function UnitchartGridLayoutId() {
       if (lite) {
         rect.join(
           function (enter) {
-            const rectEner = enter
-              .append("rect")
-              .attr("id", (d) => "rect" + d.id)
-              .attr("stroke", "white")
-              .attr("stroke-width", 1)
-              .attr("fill", "rgb(235, 224, 208)")
-              .attr("x", (d) => justedxValue(d))
-              .attr("y", (d) => justedyValue(d))
-              .attr("height", sizeValue)
-              .attr("width", sizeValue)
-              .style("opacity", 0);
-            const rectEnterTransition = rectEner
-              .transition()
-              .duration(1200)
-              .delay((d) => d.id)
-              .style("opacity", 1);
-            return rectEnterTransition;
+            return enter;
           },
           function (update) {
             const rectUpdateTransition = update

@@ -63,8 +63,8 @@ export default function SankeyChartLink() {
 
       const data_links = aqData_gi.objects();
 
-      console.log(aqData.objects());
-      console.log(data_links);
+      // console.log(aqData.objects());
+      // console.log(data_links);
 
       const sankey = d3
         .sankey()
@@ -120,16 +120,16 @@ export default function SankeyChartLink() {
         "peoplewithdisabilitiesorchronichealthconditions",
       ];
 
-      console.log(linksByPath);
+      // console.log(linksByPath);
 
       const linksGroups = fl3
         .selectAll("g")
         .data(linksByPathGroupArray, (d) => d[0])
-        .join("g")
+        .enter()
+        .append("g")
         .attr("class", (d) => `linksGroup ${d[0]}`)
         .on("mouseover", function (e, d) {
           let overKeyGroup = d[0];
-
           let group = overKeyGroup.split("_")[0];
           let issue = overKeyGroup.split("_")[1];
 
@@ -156,23 +156,6 @@ export default function SankeyChartLink() {
       );
 
       if (lite) {
-        linkGroup.join(
-          (enter) => enter,
-          (update) =>
-            update.call((update) =>
-              update.transition().duration(1200).attr("stroke-dashoffset", 0)
-            ),
-          (exit) =>
-            exit.call((exit) =>
-              exit
-                .transition()
-                .duration(1200)
-                .attr(
-                  "stroke-dashoffset",
-                  (d, i, n) => n[i].getTotalLength() * 2
-                )
-            )
-        );
       } else {
         linkGroup.join(
           (enter) =>
@@ -193,27 +176,20 @@ export default function SankeyChartLink() {
           //     .attr("stroke-dashoffset", 0)
           // )
           (update) =>
-            update.call((update) =>
-              update
-                .transition()
-                .duration(1200)
-                .attr("d", d3.sankeyLinkHorizontal())
-                .attr(
-                  "stroke-dasharray",
-                  (d, i, n) => n[i].getTotalLength() * 2
-                )
-                .attr("stroke-width", (d) => Math.max(1, d.width))
-                .attr("stroke-dashoffset", 0)
-            ),
+            update
+              .transition()
+              .duration(1200)
+              .attr("d", d3.sankeyLinkHorizontal())
+              .attr("stroke-dasharray", (d, i, n) => n[i].getTotalLength() * 2)
+              .attr("stroke-width", (d) => Math.max(1, d.width))
+              .attr("stroke-dashoffset", 0),
           (exit) =>
-            exit.call((exit) =>
-              exit
-                .transition()
-                .duration(500)
-                .attr("d", d3.sankeyLinkHorizontal())
-                .attr("stroke-width", 0)
-                .remove()
-            )
+            exit
+              .transition()
+              .duration(500)
+              .attr("d", d3.sankeyLinkHorizontal())
+              .attr("stroke-width", 0)
+              .remove()
         );
       }
 

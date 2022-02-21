@@ -63,8 +63,8 @@ export default function SankeyChartText() {
 
       const data_links = aqData_gi.objects();
 
-      console.log(aqData.objects());
-      console.log(data_links);
+      // console.log(aqData.objects());
+      // console.log(data_links);
 
       const sankey = d3
         .sankey()
@@ -78,7 +78,7 @@ export default function SankeyChartText() {
         ]);
       const nodeByName = new Map();
 
-      for (const link of data_links) {
+      for (let link of data_links) {
         if (!nodeByName.has(link.source))
           nodeByName.set(link.source, { name: link.source });
         if (!nodeByName.has(link.target))
@@ -94,28 +94,22 @@ export default function SankeyChartText() {
         links: graph.links.map((d) => Object.assign({}, d)),
       });
 
-      const leftNodeList = [
-        "firstnations",
-        "racialminorities",
-        "women",
-        "children",
-        "youngpeople",
-        "unemployedorprecariouslyemployed",
-        "peoplewithdisabilitiesorchronichealthconditions",
-      ];
+      console.log(nodes);
 
-      const nodeGroup = fl4.selectAll("g").data(nodes, (d) => d.name || d[0]);
+      const nodeGroup = fl4.selectAll("g").data(nodes, (d) => d.name);
 
       if (lite) {
         nodeGroup.join(
           (enter) => enter,
-          (update) =>
+          function (update) {
             update
               .select("text")
               .transition()
               .duration(750)
               .attr("opacity", 1)
-              .text((d) => `${d.name}:${d.value}`),
+              .text((d) => `${d.name}:${d.value}`);
+            return update;
+          },
           (exit) =>
             exit.select("text").transition().duration(200).attr("opacity", 0)
         );
@@ -131,11 +125,11 @@ export default function SankeyChartText() {
                   .attr("opacity", 0)
                   .attr("dy", "0.35em")
                   .attr("text-anchor", (d) =>
-                    leftNodeList.includes(d.name) ? "start" : "end"
+                    d.sourceLinks.length ? "start" : "end"
                   )
                   .style("fill", "white")
                   .attr("x", (d) =>
-                    leftNodeList.includes(d.name) ? d.x0 + 30 : d.x1 - 30
+                    d.sourceLinks.length ? d.x0 + 30 : d.x1 - 30
                   )
                   .attr("y", (d) => (d.y1 + d.y0) / 2)
                   .text((d) => `${d.name}:${d.value}`)
@@ -156,18 +150,22 @@ export default function SankeyChartText() {
                 .attr("opacity", 1)
                 .attr("y", (d) => (d.y1 + d.y0) / 2)
                 .attr("x", (d) =>
-                  leftNodeList.includes(d.name) ? d.x0 + 30 : d.x1 - 30
+                  d.sourceLinks.length ? d.x0 + 30 : d.x1 - 30
                 )
                 .attr("text-anchor", (d) =>
-                  leftNodeList.includes(d.name) ? "start" : "end"
+                  d.sourceLinks.length ? "start" : "end"
                 )
                 .text((d) => `${d.name}:${d.value}`)
             ),
           (exit) =>
             exit.call((exit) =>
-              exit.select("text").transition().duration(200).attr("opacity", 0)
+              exit
+                .select("text")
+                .transition()
+                .duration(200)
+                .attr("opacity", 0)
+                .remove()
             )
-          // .remove()
         );
       }
     });
