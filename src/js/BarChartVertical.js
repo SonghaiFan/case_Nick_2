@@ -101,8 +101,6 @@ export default function BarChartVertical() {
 
       // RENDER
 
-      console.log(data2);
-
       const idArray = [...new Set(aqData.array("id"))];
 
       const OEg = fl2
@@ -116,13 +114,15 @@ export default function BarChartVertical() {
           if (overKeyGroup) {
             let articleInGroup = dataMap.get(overKeyGroup)[0].ids;
 
-            fl.selectAll("rect").attr("fill", "rgb(235, 224, 208)");
+            fl.selectAll("rect").attr("fill", (d) =>
+              articleInGroup.includes(d.id)
+                ? colorScale(overKeyGroup)
+                : "rgb(235, 224, 208)"
+            );
 
-            articleInGroup.forEach(function (i) {
-              let articleRect = fl.select(`#rect${i}`);
-
-              articleRect.attr("fill", colorScale(overKeyGroup));
-            });
+            // articleInGroup.forEach(function (i) {
+            //   fl.select(`#rect${i}`).attr("fill", colorScale(overKeyGroup));
+            // });
 
             let percentage = (articleInGroup.length / idArray.length) * 100;
 

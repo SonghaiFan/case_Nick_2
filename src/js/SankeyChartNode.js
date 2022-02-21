@@ -1,4 +1,4 @@
-export default function SankeyChartDm() {
+export default function SankeyChartNode() {
   // CANVAS SETUP
   let margin = {
       top: 0.1,

@@ -96,14 +96,15 @@ export default function UnitchartGridLayoutId() {
             const rectEnterTransition = rectEner
               .transition()
               .duration(1200)
+              .delay((d) => d.id)
               .style("opacity", 1);
             return rectEnterTransition;
           },
           function (update) {
             const rectUpdateTransition = update
               .transition()
-              .duration(details ? 1500 : 1200)
-              .delay((d, i) => d.id)
+              .duration(1200)
+              .delay((d) => d.id)
               .style("opacity", 1);
 
             return rectUpdateTransition;

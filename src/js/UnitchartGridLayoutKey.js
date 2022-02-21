@@ -137,7 +137,7 @@ export default function UnitchartGridLayoutKey() {
             rectEner
               .transition()
               .duration(1200)
-              .delay((d, i) => 1200 + d.id)
+              .delay((d) => d.id)
               .style("opacity", 1);
 
             return rectEner;
@@ -146,7 +146,7 @@ export default function UnitchartGridLayoutKey() {
             return update
               .transition()
               .duration(1200)
-              .delay((d, i) => d.id)
+              .delay((d) => d.id)
               .style("opacity", 1);
           },
           function (exit) {
