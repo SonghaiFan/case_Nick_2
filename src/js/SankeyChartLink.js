@@ -214,7 +214,7 @@ export default function SankeyChartLink() {
             articleInPath.includes(d.id)
               ? d.id == overedRectId
                 ? "white"
-                : "rgb(235, 224, 208)"
+                : "rgb(255, 250, 240)"
               : "black"
           );
 
@@ -229,7 +229,7 @@ export default function SankeyChartLink() {
         })
         .on("mouseout", function (e, d) {
           d3.select(this).attr("stroke-width", d.width);
-          fl.selectAll("rect").attr("fill", "rgb(235, 224, 208)");
+          fl.selectAll("rect").attr("fill", "rgb(255, 250, 240)");
         });
     });
   }

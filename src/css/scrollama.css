@@ -102,7 +102,7 @@ a:hover {
   height: 100%; */
   font-family: "Times New Roman", Times, serif;
   color: black;
-  background-color: rgb(235, 224, 208);
+  background-color: rgb(255, 250, 240);
   overflow: hidden;
   white-space: pre-wrap;
   text-align: left;
@@ -116,7 +116,7 @@ a:hover {
   position: absolute;
   left: 0;
   top: 0;
-  background: linear-gradient(transparent 150px, rgb(235, 224, 208));
+  background: linear-gradient(transparent 150px, rgb(255, 250, 240));
 }
 
 .step {

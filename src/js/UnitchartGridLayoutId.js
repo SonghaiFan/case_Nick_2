@@ -112,7 +112,7 @@ export default function UnitchartGridLayoutId() {
               .attr("id", (d) => "rect" + d.id)
               .attr("stroke", "white")
               .attr("stroke-width", 1)
-              .attr("fill", "rgb(235, 224, 208)")
+              .attr("fill", "rgb(255, 250, 240)")
               .attr("x", (d) => justedxValue(d))
               // .attr("y", (d) => -2 * height)
               .attr("y", (d) => justedyValue(d))
@@ -132,7 +132,7 @@ export default function UnitchartGridLayoutId() {
               .delay((d, i) => d.id)
               .attr("height", sizeValue)
               .attr("width", sizeValue)
-              .attr("fill", "rgb(235, 224, 208)")
+              .attr("fill", "rgb(255, 250, 240)")
               .attr("x", (d) => justedxValue(d))
               .attr("y", (d) => justedyValue(d))
               .style("opacity", 1);

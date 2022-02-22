@@ -163,7 +163,7 @@ export default function UnitchartGridLayoutKey() {
             let rectEner = enter
               .append("rect")
               .attr("class", (d, i) => `OErect id_${d.id}`)
-              // .style("mix-blend-mode", "hard-light")
+              // .style("mix-blend-mode", "multiply")
               .attr("x", (d) => justedxValue2(d))
               .attr("y", (d) => justedyValue2(d))
               .attr("height", Math.min(25, yScale2.bandwidth()))

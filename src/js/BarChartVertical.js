@@ -117,7 +117,7 @@ export default function BarChartVertical() {
             fl.selectAll("rect").attr("fill", (d) =>
               articleInGroup.includes(d.id)
                 ? colorScale(overKeyGroup)
-                : "rgb(235, 224, 208)"
+                : "rgb(255, 250, 240)"
             );
 
             // articleInGroup.forEach(function (i) {
@@ -142,7 +142,7 @@ export default function BarChartVertical() {
         })
         .on("mouseout", function (e, d) {
           al.selectAll("*").remove();
-          fl.selectAll("rect").attr("fill", "rgb(235, 224, 208)");
+          fl.selectAll("rect").attr("fill", "rgb(255, 250, 240)");
         });
 
       const OE = OEg.selectAll("rect").data((d) => d[1]);

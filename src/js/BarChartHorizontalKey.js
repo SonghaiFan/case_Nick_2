@@ -40,11 +40,26 @@ export default function BarChartHorizontalKey() {
         .groupby("dim_x")
         .orderby(["dim_x", "dim_color", "dim"])
         .derive({ sum_measure_y: (d) => op.sum(d.measure_y) })
+        .derive({
+          mean_measure_y: (d) => d.sum_measure_y / op.max(d.sum_measure_y),
+        })
         .derive({ sum_measure_y1: aq.rolling((d) => op.sum(d.measure_y)) })
         .derive({ sum_measure_y0: (d) => op.lag(d.sum_measure_y1, 1, 0) })
         .derive({ gid: (d) => op.row_number() })
         .ungroup()
-        .unorder();
+        .unorder()
+        .derive({
+          mean_measure_y: (d) =>
+            (d.sum_measure_y / op.max(d.sum_measure_y)) * 0.575814536340852,
+        })
+        .derive({
+          mean_measure_y1: (d) =>
+            (d.sum_measure_y1 / op.max(d.sum_measure_y)) * 0.575814536340852,
+        })
+        .derive({
+          mean_measure_y0: (d) =>
+            (d.sum_measure_y0 / op.max(d.sum_measure_y)) * 0.575814536340852,
+        });
 
       // data is array object
 
@@ -87,7 +102,7 @@ export default function BarChartHorizontalKey() {
         .scaleLinear()
         .domain(
           y_domain || stack
-            ? [0, d3.max(aqDataS.array("sum_measure_y"))]
+            ? [0, d3.max(aqDataS.array("mean_measure_y"))]
             : [0, d3.max(aqDataS.array("measure_y"))]
         )
         .range([innerHeight, 0]);
@@ -95,14 +110,7 @@ export default function BarChartHorizontalKey() {
       const colorScale = d3
         .scaleOrdinal()
         .domain(aqDataS.array("dim_color"))
-        .range([
-          "#fa4d1d",
-          "#fcdb39",
-          "#1c6ae4",
-          "#03b976",
-          "#fac3d3",
-          "#fffaf0",
-        ]);
+        .range(["rgb(252, 219, 57)", "rgb(3, 185, 118)", "rgb(250, 195, 211)"]);
 
       xl.transition()
         .duration(1200)
@@ -129,10 +137,10 @@ export default function BarChartHorizontalKey() {
       const xValue = (d) => xScale(d.dim_x);
       const heightValue = (d) =>
         stack
-          ? innerHeight - yScale(d.sum_measure_y1 - d.sum_measure_y0)
+          ? innerHeight - yScale(d.mean_measure_y1 - d.mean_measure_y0)
           : innerHeight - yScale(d.measure_y);
       const yValue = (d) =>
-        stack ? yScale(d.sum_measure_y1) : yScale(d.measure_y);
+        stack ? yScale(d.mean_measure_y1) : yScale(d.measure_y);
       const colorValue = (d) => colorScale(d.dim_color);
 
       const keyOE = (d) =>

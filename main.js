@@ -42,9 +42,7 @@ const colorValue = hierarchyData
   .derive({ percent: (d) => d.rolling_count / op.sum(d.count) || 0 })
   .derive({
     color: aq.escape((d) =>
-      d.group_or_issue == "group"
-        ? d3.interpolateCool(1 - d.percent)
-        : d3.interpolateWarm(d.percent)
+      d.group_or_issue == "group" ? "rgb(28, 106, 228)" : "rgb(250, 77, 29)"
     ),
   });
 
@@ -327,7 +325,14 @@ function stepTrigger(index) {
         .attr("stroke-dashoffset", 0);
       break;
     case 17:
-      fig1.datum(hierarchyData25).call(keyUnitChart.lite(false));
+      fig1
+        .datum(hierarchyData25)
+        .call(
+          keyUnitChart
+            .lite(false)
+            .color_domain(colorValue.array("key"))
+            .color_range(colorValue.array("color"))
+        );
       fig1.datum(articleData25).call(idUnitChart);
       fig1.datum(hierarchyData25).call(aSankeyChartText);
       fig1.datum(hierarchyData25).call(aSankeyChartLink);
@@ -363,7 +368,7 @@ function stepTrigger(index) {
             left: 0,
           })
           .color_domain(characteristicsData.array("key"))
-          .color_range(["rgb(235, 224, 208)"])
+          .color_range(["rgb(255, 250, 240)"])
           .lite(false)
       );
       break;

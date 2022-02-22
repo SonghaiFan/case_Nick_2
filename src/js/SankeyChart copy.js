@@ -267,7 +267,7 @@ export default function SankeyChart() {
 
       //     let articleInPath = linksByPath.get(overedPath);
 
-      //     fl.selectAll("rect").attr("fill", "rgb(235, 224, 208)");
+      //     fl.selectAll("rect").attr("fill", "rgb(255, 250, 240)");
 
       //     articleInPath.forEach(function (i) {
       //       let articleRect = fl.select(`#rect${i.id}`);
@@ -278,14 +278,14 @@ export default function SankeyChart() {
       //   })
       //   .on("mouseout", function (e, d) {
       //     d3.select(this).attr("stroke-width", d.width);
-      //     fl.selectAll("rect").attr("fill", "rgb(235, 224, 208)");
+      //     fl.selectAll("rect").attr("fill", "rgb(255, 250, 240)");
       //   });
 
       // const node = fl2.selectAll("rect");
 
       // node
       //   .on("mouseover", function (e, d) {
-      //     fl.selectAll("rect").attr("fill", "rgb(235, 224, 208)");
+      //     fl.selectAll("rect").attr("fill", "rgb(255, 250, 240)");
       //     let articleInNode = d.sourceLinks.length
       //       ? d.sourceLinks
       //       : d.targetLinks;
@@ -296,14 +296,14 @@ export default function SankeyChart() {
       //     });
       //   })
       //   .on("mouseout", function (e, d) {
-      //     fl.selectAll("rect").attr("fill", "rgb(235, 224, 208)");
+      //     fl.selectAll("rect").attr("fill", "rgb(255, 250, 240)");
       //   });
 
       // const rects = fl.selectAll("rect").raise();
 
       // rects
       //   .on("mouseover", function (e, d) {
-      //     rects.attr("fill", "rgb(235, 224, 208)");
+      //     rects.attr("fill", "rgb(255, 250, 240)");
       //     let overedRect = d3.select(this);
       //     overedRect.attr("fill", "white");
 
@@ -315,7 +315,7 @@ export default function SankeyChart() {
       //       .raise();
       //   })
       //   .on("mouseout", function () {
-      //     rects.attr("fill", "rgb(235, 224, 208)");
+      //     rects.attr("fill", "rgb(255, 250, 240)");
       //     d3.selectAll(".linkGroup")
       //       .attr("stroke", "gray")
       //       .attr("stroke-width", (d) => Math.max(1, d.width));

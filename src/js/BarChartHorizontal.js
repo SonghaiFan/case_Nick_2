@@ -79,14 +79,7 @@ export default function BarChartHorizontal() {
       const colorScale = d3
         .scaleOrdinal()
         .domain(aqDataU.array("dim_color"))
-        .range([
-          "#fa4d1d",
-          "#fcdb39",
-          "#1c6ae4",
-          "#03b976",
-          "#fac3d3",
-          "#fffaf0",
-        ]);
+        .range(["rgb(252, 219, 57)", "rgb(3, 185, 118)", "rgb(250, 195, 211)"]);
 
       xl.transition()
         .duration(1200)
@@ -133,22 +126,22 @@ export default function BarChartHorizontal() {
             .append("rect")
             .attr("class", (d) => (d.id ? d.id + d.key : d.publisher + d.key))
             .attr("fill", (d) => colorValue(d))
-            .style("opacity", 0);
-
-          const rectEnterTransition = rectEner
-            .transition()
-            .duration(smooth ? 1500 : 0)
-            .delay((d, i) => d.id)
-            .style("opacity", 0.2)
-            .attr("width", size)
-            .attr("height", size)
             .attr(
               "x",
               (d, i) =>
                 xValue(d) + size / 2 + (i / data.length) * xScale.bandwidth()
             )
             .attr("y", (d) => yValue(d) - size / 2)
-            .attr("rx", (d) => size);
+            .style("opacity", 0);
+
+          const rectEnterTransition = rectEner
+            .transition()
+            .duration(smooth ? 1500 : 0)
+            .delay((d, i) => d.id)
+            .style("opacity", 0.6)
+            .attr("width", size)
+            .attr("height", 4);
+          // .attr("rx", (d) => size);
 
           return rectEnterTransition;
         },
@@ -159,16 +152,16 @@ export default function BarChartHorizontal() {
             .attr("fill", (d) => colorValue(d))
             .style("opacity", 1)
             .attr("stroke-width", 0)
-            .style("opacity", 0.2)
-            .attr("width", size)
+            .style("opacity", 0.6)
+            .attr("width", 4)
             .attr("height", size)
             .attr(
               "x",
               (d, i) =>
                 xValue(d) + size / 2 + (i / data.length) * xScale.bandwidth()
             )
-            .attr("y", (d) => yValue(d) - size / 2)
-            .attr("rx", (d) => size);
+            .attr("y", (d) => yValue(d) - size / 2);
+          // .attr("rx", (d) => size);
 
           return rectUpdateTransition;
         },
