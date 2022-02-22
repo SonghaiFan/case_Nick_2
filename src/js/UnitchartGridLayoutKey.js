@@ -182,7 +182,7 @@ export default function UnitchartGridLayoutKey() {
           function (update) {
             return update
               .transition()
-              .duration(1200)
+              .duration(1500)
               .delay((d, i) => d.id)
               .attr("x", (d) => justedxValue2(d))
               .attr("y", (d) => justedyValue2(d))

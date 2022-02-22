@@ -179,7 +179,14 @@ function stepTrigger(index) {
         })
       );
       fig1.select(".figureLayer2").selectAll("*").remove();
-      fig1.datum(articleData).call(idUnitChart);
+      fig1.datum(articleData).call(
+        idUnitChart.margin({
+          top: 0.1,
+          right: 0.6,
+          bottom: 0.1,
+          left: 0.1,
+        })
+      );
       break;
     case 7:
       fig1.datum(hierarchyData).call(
@@ -199,10 +206,24 @@ function stepTrigger(index) {
           left: 0.6,
         })
       );
-      fig1.datum(articleData).call(idUnitChart);
+      fig1.datum(articleData).call(
+        idUnitChart.margin({
+          top: 0.1,
+          right: 0.6,
+          bottom: 0.1,
+          left: 0.1,
+        })
+      );
       break;
     case 8:
-      fig1.datum(articleData25).call(idUnitChart);
+      fig1.datum(articleData25).call(
+        idUnitChart.margin({
+          top: 0.1,
+          right: 0.6,
+          bottom: 0.1,
+          left: 0.1,
+        })
+      );
       fig1.datum(hierarchyData25).call(
         keyUnitChart.margin({
           top: 0.1,
@@ -225,7 +246,16 @@ function stepTrigger(index) {
       break;
     case 11:
       fig1.datum(hierarchyData25).call(keyUnitChart.lite(false));
-      fig1.datum(articleData25).call(idUnitChart.lite(false));
+      fig1.datum(articleData25).call(
+        idUnitChart
+          .margin({
+            top: 0.1,
+            right: 0.6,
+            bottom: 0.1,
+            left: 0.1,
+          })
+          .lite(false)
+      );
       fig1.datum(hierarchyData25).call(keyBarChartVertical);
       fig1.select(".figureLayer3").selectAll("*").remove();
       fig1.select(".figureLayer4").selectAll("*").remove();
@@ -233,7 +263,16 @@ function stepTrigger(index) {
     case 12:
       fig1.select(".xAxisLayer").selectAll("*").remove();
       fig1.select(".yAxisLayer").selectAll("*").remove();
-      fig1.datum(articleData25).call(idUnitChart.lite(true));
+      fig1.datum(articleData25).call(
+        idUnitChart
+          .margin({
+            top: 0.1,
+            right: 0.6,
+            bottom: 0.1,
+            left: 0.1,
+          })
+          .lite(true)
+      );
       fig1.datum(hierarchyData25).call(keyUnitChart.lite(true));
       fig1.datum(hierarchyData25).call(
         aSankeyChartNode.margin({
@@ -261,9 +300,16 @@ function stepTrigger(index) {
       );
       break;
     case 13:
-      fig1
-        .datum(articleData25.filter((d) => d.id == 1))
-        .call(idUnitChart.lite(true));
+      fig1.datum(articleData25.filter((d) => d.id == 1)).call(
+        idUnitChart
+          .margin({
+            top: 0.1,
+            right: 0.6,
+            bottom: 0.1,
+            left: 0.1,
+          })
+          .lite(true)
+      );
       fig1.datum(hierarchyData25.filter((d) => d.id == 1)).call(keyUnitChart);
       fig1
         .datum(hierarchyData25.filter((d) => d.id == 1))
@@ -277,9 +323,16 @@ function stepTrigger(index) {
         .attr("stroke-dashoffset", 0);
       break;
     case 14:
-      fig1
-        .datum(articleData25.filter((d) => d.id <= 2))
-        .call(idUnitChart.lite(true));
+      fig1.datum(articleData25.filter((d) => d.id <= 2)).call(
+        idUnitChart
+          .margin({
+            top: 0.1,
+            right: 0.6,
+            bottom: 0.1,
+            left: 0.1,
+          })
+          .lite(true)
+      );
       fig1.datum(hierarchyData25.filter((d) => d.id <= 2)).call(keyUnitChart);
       fig1
         .datum(hierarchyData25.filter((d) => d.id <= 2))
@@ -293,9 +346,16 @@ function stepTrigger(index) {
         .attr("stroke-dashoffset", 0);
       break;
     case 15:
-      fig1
-        .datum(articleData25.filter((d) => d.id <= 3))
-        .call(idUnitChart.lite(true));
+      fig1.datum(articleData25.filter((d) => d.id <= 3)).call(
+        idUnitChart
+          .margin({
+            top: 0.1,
+            right: 0.6,
+            bottom: 0.1,
+            left: 0.1,
+          })
+          .lite(true)
+      );
       fig1.datum(hierarchyData25.filter((d) => d.id <= 3)).call(keyUnitChart);
       fig1
         .datum(hierarchyData25.filter((d) => d.id <= 3))
@@ -312,7 +372,14 @@ function stepTrigger(index) {
       fig1
         .datum(hierarchyData25.filter((d) => d.id <= 4))
         .call(keyUnitChart.lite(true));
-      fig1.datum(articleData25.filter((d) => d.id <= 4)).call(idUnitChart);
+      fig1.datum(articleData25.filter((d) => d.id <= 4)).call(
+        idUnitChart.margin({
+          top: 0.1,
+          right: 0.6,
+          bottom: 0.1,
+          left: 0.1,
+        })
+      );
       fig1
         .datum(hierarchyData25.filter((d) => d.id <= 4))
         .call(aSankeyChartText);
@@ -333,7 +400,14 @@ function stepTrigger(index) {
             .color_domain(colorValue.array("key"))
             .color_range(colorValue.array("color"))
         );
-      fig1.datum(articleData25).call(idUnitChart);
+      fig1.datum(articleData25).call(
+        idUnitChart.margin({
+          top: 0.1,
+          right: 0.6,
+          bottom: 0.1,
+          left: 0.1,
+        })
+      );
       fig1.datum(hierarchyData25).call(aSankeyChartText);
       fig1.datum(hierarchyData25).call(aSankeyChartLink);
       d3.selectAll(".linksGroup")

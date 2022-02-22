@@ -82,7 +82,7 @@ export default function BarChartHorizontal() {
         .range(["rgb(252, 219, 57)", "rgb(3, 185, 118)", "rgb(250, 195, 211)"]);
 
       xl.transition()
-        .duration(1200)
+        .duration(750)
         .style("opacity", 1)
         .call(d3.axisBottom(xScale))
         .attr(
@@ -91,7 +91,7 @@ export default function BarChartHorizontal() {
         );
 
       yl.transition()
-        .duration(1200)
+        .duration(750)
         .style("opacity", 1)
         .call(d3.axisLeft(yScale))
         .call(function (g) {
@@ -138,10 +138,10 @@ export default function BarChartHorizontal() {
             .transition()
             .duration(smooth ? 1500 : 0)
             .delay((d, i) => d.id)
-            .style("opacity", 0.6)
+            .style("opacity", 0.2)
             .attr("width", size)
-            .attr("height", 4);
-          // .attr("rx", (d) => size);
+            .attr("height", size)
+            .attr("rx", (d) => size);
 
           return rectEnterTransition;
         },
@@ -152,16 +152,16 @@ export default function BarChartHorizontal() {
             .attr("fill", (d) => colorValue(d))
             .style("opacity", 1)
             .attr("stroke-width", 0)
-            .style("opacity", 0.6)
-            .attr("width", 4)
+            .style("opacity", 0.2)
+            .attr("width", size)
             .attr("height", size)
             .attr(
               "x",
               (d, i) =>
                 xValue(d) + size / 2 + (i / data.length) * xScale.bandwidth()
             )
-            .attr("y", (d) => yValue(d) - size / 2);
-          // .attr("rx", (d) => size);
+            .attr("y", (d) => yValue(d) - size / 2)
+            .attr("rx", (d) => size);
 
           return rectUpdateTransition;
         },

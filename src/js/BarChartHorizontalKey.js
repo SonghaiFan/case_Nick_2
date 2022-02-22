@@ -176,16 +176,17 @@ export default function BarChartHorizontalKey() {
           function (update) {
             const rectUpdateTransition = update
               .transition()
-              .duration(500)
+              .duration(750)
               .style("opacity", 1)
               .attr("stroke-width", 0)
               .attr("fill", (d) => colorValue(d))
+              .attr("rx", 0)
               .transition()
               .delay((d, i) => i)
               .attr("y", (d) => yValue(d))
               .attr("height", (d) => heightValue(d))
               .transition()
-              .duration(500)
+              .duration(750)
               .attr("width", xScale.bandwidth())
               .attr("x", (d) => xValue(d));
 
