@@ -2,6 +2,8 @@ import UnitchartGridLayoutKey from "./src/js/UnitchartGridLayoutKey.js";
 import UnitchartGridLayoutId from "./src/js/UnitchartGridLayoutId.js";
 import BarChartStackedVertical from "./src/js/BarChartStackedVertical.js";
 import BarChartVertical from "./src/js/BarChartVertical.js";
+import BarChartHorizontal from "./src/js/BarChartHorizontal.js";
+import BarChartHorizontalKey from "./src/js/BarChartHorizontalKey.js";
 import SankeyChartText from "./src/js/SankeyChartText.js";
 import SankeyChartNode from "./src/js/SankeyChartNode.js";
 import SankeyChartLink from "./src/js/SankeyChartLink.js";
@@ -24,6 +26,12 @@ const articleData = await aq.loadCSV("src/data/article_data.csv");
 const hierarchyData = await aq.loadCSV("src/data/hierarchy_data.csv");
 const articleData25 = await aq.loadCSV("src/data/article_data25.csv");
 const hierarchyData25 = await aq.loadCSV("src/data/hierarchy_data25.csv");
+const characteristicsData = await aq.loadCSV(
+  "src/data/characteristics_data.csv"
+);
+const characteristicsDataAgg = await aq.loadCSV(
+  "src/data/characteristics_data_agg.csv"
+);
 
 const colorValue = hierarchyData
   .groupby(["group_or_issue", "key"])
@@ -67,6 +75,14 @@ const aSankeyChartNode = SankeyChartNode()
   .color_range(colorValue.array("color"));
 
 const aSankeyChartLink = SankeyChartLink();
+
+const aBarChartHorizontal = BarChartHorizontal()
+  .dim_x("publisher")
+  .dim_color("publisher")
+  .dim("id")
+  .measure_y("value");
+
+const aBarChartHorizontalKey = BarChartHorizontalKey().measure_y("value");
 
 const dumyData = aq.table({
   id: d3.range(1, 3846),
@@ -247,7 +263,9 @@ function stepTrigger(index) {
       );
       break;
     case 13:
-      fig1.datum(articleData25.filter((d) => d.id == 1)).call(idUnitChart);
+      fig1
+        .datum(articleData25.filter((d) => d.id == 1))
+        .call(idUnitChart.lite(true));
       fig1.datum(hierarchyData25.filter((d) => d.id == 1)).call(keyUnitChart);
       fig1
         .datum(hierarchyData25.filter((d) => d.id == 1))
@@ -261,7 +279,9 @@ function stepTrigger(index) {
         .attr("stroke-dashoffset", 0);
       break;
     case 14:
-      fig1.datum(articleData25.filter((d) => d.id <= 2)).call(idUnitChart);
+      fig1
+        .datum(articleData25.filter((d) => d.id <= 2))
+        .call(idUnitChart.lite(true));
       fig1.datum(hierarchyData25.filter((d) => d.id <= 2)).call(keyUnitChart);
       fig1
         .datum(hierarchyData25.filter((d) => d.id <= 2))
@@ -275,7 +295,9 @@ function stepTrigger(index) {
         .attr("stroke-dashoffset", 0);
       break;
     case 15:
-      fig1.datum(articleData25.filter((d) => d.id <= 3)).call(idUnitChart);
+      fig1
+        .datum(articleData25.filter((d) => d.id <= 3))
+        .call(idUnitChart.lite(true));
       fig1.datum(hierarchyData25.filter((d) => d.id <= 3)).call(keyUnitChart);
       fig1
         .datum(hierarchyData25.filter((d) => d.id <= 3))
@@ -289,7 +311,9 @@ function stepTrigger(index) {
         .attr("stroke-dashoffset", 0);
       break;
     case 16:
-      fig1.datum(hierarchyData25.filter((d) => d.id <= 4)).call(keyUnitChart);
+      fig1
+        .datum(hierarchyData25.filter((d) => d.id <= 4))
+        .call(keyUnitChart.lite(true));
       fig1.datum(articleData25.filter((d) => d.id <= 4)).call(idUnitChart);
       fig1
         .datum(hierarchyData25.filter((d) => d.id <= 4))
@@ -303,7 +327,7 @@ function stepTrigger(index) {
         .attr("stroke-dashoffset", 0);
       break;
     case 17:
-      fig1.datum(hierarchyData25).call(keyUnitChart);
+      fig1.datum(hierarchyData25).call(keyUnitChart.lite(false));
       fig1.datum(articleData25).call(idUnitChart);
       fig1.datum(hierarchyData25).call(aSankeyChartText);
       fig1.datum(hierarchyData25).call(aSankeyChartLink);
@@ -314,14 +338,83 @@ function stepTrigger(index) {
         .attr("stroke-dashoffset", 0);
       break;
     case 18:
+      // fig1.select(".figureLayer1").selectAll("*").remove();
+      fig1.select(".figureLayer2").selectAll("*").remove();
+      fig1.select(".figureLayer3").selectAll("*").remove();
+      fig1.select(".figureLayer4").selectAll("*").remove();
+      fig1.select(".xAxisLayer").selectAll("*").remove();
+      fig1.select(".yAxisLayer").selectAll("*").remove();
+      fig1.datum(characteristicsData.dedupe("id")).call(
+        idUnitChart
+          .margin({
+            top: 0.1,
+            right: 0,
+            bottom: 0.1,
+            left: 0,
+          })
+          .lite(false)
+      );
+      fig1.datum(characteristicsData).call(
+        keyUnitChart
+          .margin({
+            top: 0.1,
+            right: 0,
+            bottom: 0.1,
+            left: 0,
+          })
+          .color_domain(characteristicsData.array("key"))
+          .color_range(["rgb(235, 224, 208)"])
+          .lite(false)
+      );
       break;
     case 19:
+      fig1.select(".figureLayer").selectAll("*").remove();
+      fig1
+        .datum(characteristicsData)
+        .call(
+          aBarChartHorizontal
+            .dim_x("publisher")
+            .dim_color("publisher")
+            .dim("key")
+            .measure_y("value")
+            .smooth(true)
+        );
       break;
     case 20:
+      fig1
+        .datum(characteristicsData)
+        .call(
+          aBarChartHorizontal
+            .dim_x("key")
+            .dim_color("publisher")
+            .dim("key")
+            .measure_y("value")
+            .smooth(true)
+        );
       break;
     case 21:
+      fig1
+        .datum(characteristicsDataAgg)
+        .call(
+          aBarChartHorizontalKey
+            .dim_x("key")
+            .dim_color("publisher")
+            .measure_y("value")
+            .smooth(true)
+            .stack(true)
+        );
       break;
     case 22:
+      fig1
+        .datum(characteristicsDataAgg)
+        .call(
+          aBarChartHorizontalKey
+            .dim_x("key")
+            .dim_color("publisher")
+            .measure_y("value")
+            .smooth(true)
+            .stack(false)
+        );
       break;
   }
 }
@@ -330,7 +423,9 @@ function stepTrigger(index) {
 function handleResize() {
   // 1. update height of step elements
   const stepH = Math.floor(window.innerHeight * 0.85);
-  steps.style("margin-bottom", stepH + "px");
+  steps
+    .style("margin-top", stepH / 2 + "px")
+    .style("margin-bottom", stepH / 2 + "px");
   chapters.style("min-height", stepH + "px");
 
   const figureHeight = window.innerHeight * 0.95;

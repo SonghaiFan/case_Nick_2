@@ -119,7 +119,9 @@ export default function UnitchartGridLayoutKey() {
       //   .join("g")
       //   .attr("class", (d) => `OEg key_${d[0]}`);
 
-      const OE = fl1.selectAll("rect").data(data, (d) => d.id + d.key);
+      const OE = fl1
+        .selectAll("rect")
+        .data(data, (d) => (d.id ? d.id + d.key : d.publisher + d.key));
 
       if (lite) {
         OE.join(
@@ -184,6 +186,7 @@ export default function UnitchartGridLayoutKey() {
               .delay((d, i) => d.id)
               .attr("x", (d) => justedxValue2(d))
               .attr("y", (d) => justedyValue2(d))
+              .attr("rx", 0)
               .attr("height", Math.min(25, yScale2.bandwidth()))
               .attr("width", Math.min(100, xScale2.bandwidth()))
               .style("opacity", 1)
@@ -194,7 +197,7 @@ export default function UnitchartGridLayoutKey() {
               exit
                 .transition()
                 .duration(1200)
-                .attr("y", (d) => -2 * height)
+                // .attr("y", (d) => -2 * height)
                 .style("opacity", 0)
                 .remove()
             );

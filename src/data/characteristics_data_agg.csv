@@ -1,0 +1,16 @@
+publisher,key,value
+Fairfax,amplifiesdisadvantagedvoice,0.57925407925408
+Fairfax,dispargesdisadvantaged,0.0774647887323944
+Fairfax,recognisesintersectionality,0.353571428571429
+Fairfax,provideshumanexamples,0.407142857142857
+Fairfax,focusesonsolutions,0.614657210401891
+News,amplifiesdisadvantagedvoice,0.380693069306931
+News,dispargesdisadvantaged,0.3
+News,recognisesintersectionality,0.31
+News,provideshumanexamples,0.297029702970297
+News,focusesonsolutions,0.511666666666667
+Others,amplifiesdisadvantagedvoice,0.489855072463768
+Others,dispargesdisadvantaged,0.0652173913043478
+Others,recognisesintersectionality,0.456521739130435
+Others,provideshumanexamples,0.282608695652174
+Others,focusesonsolutions,0.652173913043478

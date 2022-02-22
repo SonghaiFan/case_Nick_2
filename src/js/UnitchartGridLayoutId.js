@@ -77,7 +77,9 @@ export default function UnitchartGridLayoutId() {
 
       // RENDER
 
-      const rect = fl.selectAll("rect").data(data, (d) => d.id);
+      const rect = fl
+        .selectAll("rect")
+        .data(data, (d) => (d.id ? d.id : d.dim));
 
       if (lite) {
         rect.join(

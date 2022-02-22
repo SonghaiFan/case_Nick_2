@@ -193,36 +193,44 @@ export default function SankeyChartLink() {
         );
       }
 
-      // const link = fl3.selectAll("path");
+      const link = fl3.selectAll("path");
 
-      // link
-      //   .on("mouseover", function (e, d) {
-      //     let overedLink = d3.select(this);
-      //     overedLink.attr("stroke-width", (d) => Math.max(5, d.width)).raise();
+      link
+        .on("mouseover", function (e, d) {
+          let overedLink = d3.select(this);
+          overedLink.attr("stroke-width", (d) => Math.max(5, d.width)).raise();
 
-      //     let overedRectId = overedLink
-      //       .attr("class")
-      //       .split(" ")[1]
-      //       .replace("article", "rect");
+          let overedRectId = overedLink
+            .attr("class")
+            .split(" ")[1]
+            .replace("article", "");
 
-      //     let overedLinkGroup = d3.select(this.parentNode);
-      //     let overedPath = overedLinkGroup.attr("class").split(" ")[1];
+          let overedLinkGroup = d3.select(this.parentNode);
+          let overedPath = overedLinkGroup.attr("class").split(" ")[1];
 
-      //     let articleInPath = linksByPath.get(overedPath);
+          let articleInPath = linksByPath.get(overedPath).map((d) => d.id);
 
-      //     fl.selectAll("rect").attr("fill", "rgb(235, 224, 208)");
+          fl.selectAll("rect").attr("fill", (d) =>
+            articleInPath.includes(d.id)
+              ? d.id == overedRectId
+                ? "white"
+                : "rgb(235, 224, 208)"
+              : "black"
+          );
 
-      //     articleInPath.forEach(function (i) {
-      //       let articleRect = fl.select(`#rect${i.id}`);
-      //       articleRect.attr("fill", "gray");
-      //     });
+          // console.log(articleInPath);
 
-      //     fl.select(`#${overedRectId}`).attr("fill", "white");
-      //   })
-      //   .on("mouseout", function (e, d) {
-      //     d3.select(this).attr("stroke-width", d.width);
-      //     fl.selectAll("rect").attr("fill", "rgb(235, 224, 208)");
-      //   });
+          // articleInPath.forEach(function (i) {
+          //   let articleRect = fl.select(`#rect${i.id}`);
+          //   articleRect.attr("fill", "gray");
+          // });
+
+          // fl.select(`#${overedRectId}`).attr("fill", "white");
+        })
+        .on("mouseout", function (e, d) {
+          d3.select(this).attr("stroke-width", d.width);
+          fl.selectAll("rect").attr("fill", "rgb(235, 224, 208)");
+        });
     });
   }
 
