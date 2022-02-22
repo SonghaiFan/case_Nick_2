@@ -211,25 +211,18 @@ export default function SankeyChartLink() {
           let articleInPath = linksByPath.get(overedPath).map((d) => d.id);
 
           fl.selectAll("rect").attr("fill", (d) =>
-            articleInPath.includes(d.id)
-              ? d.id == overedRectId
-                ? "white"
-                : "rgb(255, 250, 240)"
-              : "black"
+            articleInPath.includes(d.id) ? "rgb(255, 250, 240)" : "black"
           );
 
-          // console.log(articleInPath);
-
-          // articleInPath.forEach(function (i) {
-          //   let articleRect = fl.select(`#rect${i.id}`);
-          //   articleRect.attr("fill", "gray");
-          // });
-
-          // fl.select(`#${overedRectId}`).attr("fill", "white");
+          fl.selectAll("rect").attr("stroke-width", (d) =>
+            d.id == overedRectId ? 5 : 1
+          );
         })
         .on("mouseout", function (e, d) {
           d3.select(this).attr("stroke-width", d.width);
-          fl.selectAll("rect").attr("fill", "rgb(255, 250, 240)");
+          fl.selectAll("rect")
+            .attr("fill", "rgb(255, 250, 240)")
+            .attr("stroke-width", 1);
         });
     });
   }

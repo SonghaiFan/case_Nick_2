@@ -162,15 +162,21 @@ export default function UnitchartGridLayoutId() {
       if (details) {
         const lableText = (text) =>
           text
-            .replace("indigenous", '<span key="firstnations">indigenous</span>')
             .replace(
-              "migrant",
+              /indigenous/gi,
+              '<span key="firstnations">indigenous</span>'
+            )
+            .replace(
+              /migrant/gi,
               '<span key="migrantsandrefugees">migrant</span>'
             )
-            .replace("women", '<span key="women">women</span>')
-            .replace("domestic", '<span key="familyrelations">domestic</span>')
-            .replace("equality", '<span key="inequality">equality</span>')
-            .replace("violence", '<span key="violence">violence</span>');
+            .replace(/women/gi, '<span key="women">women</span>')
+            .replace(
+              /domestic/gi,
+              '<span key="familyrelations">domestic</span>'
+            )
+            .replace(/equality/gi, '<span key="inequality">equality</span>')
+            .replace(/violence/gi, '<span key="violence">violence</span>');
 
         const istd = fl
           .selectAll("foreignObject")

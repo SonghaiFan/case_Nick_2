@@ -168,7 +168,7 @@ export default function BarChartHorizontalKey() {
               .transition()
               .duration(smooth ? 1500 : 0)
               .style("opacity", 1)
-              .attr("y", (d) => yValue(d))
+              // .attr("y", (d) => yValue(d))
               .attr("height", (d) => heightValue(d));
 
             return rectEnterTransition;
@@ -195,9 +195,8 @@ export default function BarChartHorizontalKey() {
           function (exit) {
             const rectExitTransition = exit
               .transition()
-              .duration(smooth ? 500 : 0)
-              .attr("height", 0)
-              .attr("y", innerHeight)
+              .duration(smooth ? 1200 : 0)
+              .attr("y", (d) => innerHeight / 2)
               .style("opacity", 0)
               .remove();
 

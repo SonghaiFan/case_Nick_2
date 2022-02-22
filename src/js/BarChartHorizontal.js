@@ -169,6 +169,7 @@ export default function BarChartHorizontal() {
           const rectExitTransition = exit
             .transition()
             .duration(smooth ? 500 : 0)
+            .attr("y", (d) => innerHeight / 2)
             .style("opacity", 0)
             .remove();
 

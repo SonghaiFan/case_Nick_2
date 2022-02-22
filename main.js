@@ -298,6 +298,13 @@ function stepTrigger(index) {
           left: 0.45,
         })
       );
+      fig1
+        .select(".figureLayer3")
+        .selectAll("path")
+        .transition()
+        .duration(1200)
+        .delay((d) => d.id)
+        .attr("stroke-dashoffset", (d, i, n) => n[i].getTotalLength() * 2);
       break;
     case 13:
       fig1.datum(articleData25.filter((d) => d.id == 1)).call(
@@ -317,9 +324,13 @@ function stepTrigger(index) {
       fig1
         .datum(hierarchyData25.filter((d) => d.id == 1))
         .call(aSankeyChartLink.lite(true));
-      d3.selectAll(".article1")
+      fig1
+        .select(".figureLayer3")
+        .selectAll("path")
         .transition()
         .duration(1200)
+        .attr("stroke-dashoffset", (d, i, n) => n[i].getTotalLength() * 2)
+        .filter((d) => d.id == 1)
         .attr("stroke-dashoffset", 0);
       break;
     case 14:
@@ -340,9 +351,13 @@ function stepTrigger(index) {
       fig1
         .datum(hierarchyData25.filter((d) => d.id <= 2))
         .call(aSankeyChartLink);
-      d3.selectAll(".article2")
+      fig1
+        .select(".figureLayer3")
+        .selectAll("path")
         .transition()
         .duration(1200)
+        .attr("stroke-dashoffset", (d, i, n) => n[i].getTotalLength() * 2)
+        .filter((d) => d.id <= 2)
         .attr("stroke-dashoffset", 0);
       break;
     case 15:
@@ -363,9 +378,13 @@ function stepTrigger(index) {
       fig1
         .datum(hierarchyData25.filter((d) => d.id <= 3))
         .call(aSankeyChartLink);
-      d3.selectAll(".article3")
+      fig1
+        .select(".figureLayer3")
+        .selectAll("path")
         .transition()
         .duration(1200)
+        .attr("stroke-dashoffset", (d, i, n) => n[i].getTotalLength() * 2)
+        .filter((d) => d.id <= 3)
         .attr("stroke-dashoffset", 0);
       break;
     case 16:
@@ -386,9 +405,13 @@ function stepTrigger(index) {
       fig1
         .datum(hierarchyData25.filter((d) => d.id <= 4))
         .call(aSankeyChartLink);
-      d3.selectAll(".article4")
+      fig1
+        .select(".figureLayer3")
+        .selectAll("path")
         .transition()
         .duration(1200)
+        .attr("stroke-dashoffset", (d, i, n) => n[i].getTotalLength() * 2)
+        .filter((d) => d.id <= 4)
         .attr("stroke-dashoffset", 0);
       break;
     case 17:
@@ -410,11 +433,14 @@ function stepTrigger(index) {
       );
       fig1.datum(hierarchyData25).call(aSankeyChartText);
       fig1.datum(hierarchyData25).call(aSankeyChartLink);
-      d3.selectAll(".linksGroup")
+      fig1
+        .select(".figureLayer3")
         .selectAll("path")
         .transition()
         .duration(1200)
+        .delay((d) => d.id)
         .attr("stroke-dashoffset", 0);
+
       break;
     case 18:
       // fig1.select(".figureLayer1").selectAll("*").remove();
