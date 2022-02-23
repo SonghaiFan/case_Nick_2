@@ -134,7 +134,7 @@ a:hover {
 .step:before {
   content: "";
   width: 100%;
-  height: 5px;
+  height: 1px;
   position: absolute;
   left: 0;
   top: 0;
@@ -208,7 +208,7 @@ a:hover {
   display: block;
   text-align: center;
   padding: 10px 0px 10px 0px;
-  opacity: 0.1;
+  opacity: 0.5;
 }
 
 /* Change the color of links on hover */
