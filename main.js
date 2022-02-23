@@ -245,7 +245,16 @@ function stepTrigger(index) {
         .call(keyBarChartVertical);
       break;
     case 11:
-      fig1.datum(hierarchyData25).call(keyUnitChart.lite(false));
+      fig1.datum(hierarchyData25).call(
+        keyUnitChart
+          .margin({
+            top: 0.1,
+            right: 0.6,
+            bottom: 0.1,
+            left: 0.1,
+          })
+          .lite(false)
+      );
       fig1.datum(articleData25).call(
         idUnitChart
           .margin({
@@ -273,7 +282,16 @@ function stepTrigger(index) {
           })
           .lite(true)
       );
-      fig1.datum(hierarchyData25).call(keyUnitChart.lite(true));
+      fig1.datum(hierarchyData25).call(
+        keyUnitChart
+          .margin({
+            top: 0.1,
+            right: 0.6,
+            bottom: 0.1,
+            left: 0.1,
+          })
+          .lite(true)
+      );
       fig1.datum(hierarchyData25).call(
         aSankeyChartNode.margin({
           top: 0.1,
@@ -317,7 +335,14 @@ function stepTrigger(index) {
           })
           .lite(true)
       );
-      fig1.datum(hierarchyData25.filter((d) => d.id == 1)).call(keyUnitChart);
+      fig1.datum(hierarchyData25.filter((d) => d.id == 1)).call(
+        keyUnitChart.margin({
+          top: 0.1,
+          right: 0.6,
+          bottom: 0.1,
+          left: 0.1,
+        })
+      );
       fig1
         .datum(hierarchyData25.filter((d) => d.id == 1))
         .call(aSankeyChartText.lite(true));
@@ -344,7 +369,14 @@ function stepTrigger(index) {
           })
           .lite(true)
       );
-      fig1.datum(hierarchyData25.filter((d) => d.id <= 2)).call(keyUnitChart);
+      fig1.datum(hierarchyData25.filter((d) => d.id <= 2)).call(
+        keyUnitChart.margin({
+          top: 0.1,
+          right: 0.6,
+          bottom: 0.1,
+          left: 0.1,
+        })
+      );
       fig1
         .datum(hierarchyData25.filter((d) => d.id <= 2))
         .call(aSankeyChartText);
@@ -371,7 +403,14 @@ function stepTrigger(index) {
           })
           .lite(true)
       );
-      fig1.datum(hierarchyData25.filter((d) => d.id <= 3)).call(keyUnitChart);
+      fig1.datum(hierarchyData25.filter((d) => d.id <= 3)).call(
+        keyUnitChart.margin({
+          top: 0.1,
+          right: 0.6,
+          bottom: 0.1,
+          left: 0.1,
+        })
+      );
       fig1
         .datum(hierarchyData25.filter((d) => d.id <= 3))
         .call(aSankeyChartText);
@@ -388,16 +427,25 @@ function stepTrigger(index) {
         .attr("stroke-dashoffset", 0);
       break;
     case 16:
-      fig1
-        .datum(hierarchyData25.filter((d) => d.id <= 4))
-        .call(keyUnitChart.lite(true));
+      fig1.datum(hierarchyData25.filter((d) => d.id <= 4)).call(
+        keyUnitChart
+          .margin({
+            top: 0.1,
+            right: 0.6,
+            bottom: 0.1,
+            left: 0.1,
+          })
+          .lite(true)
+      );
       fig1.datum(articleData25.filter((d) => d.id <= 4)).call(
-        idUnitChart.margin({
-          top: 0.1,
-          right: 0.6,
-          bottom: 0.1,
-          left: 0.1,
-        })
+        idUnitChart
+          .margin({
+            top: 0.1,
+            right: 0.6,
+            bottom: 0.1,
+            left: 0.1,
+          })
+          .lite(true)
       );
       fig1
         .datum(hierarchyData25.filter((d) => d.id <= 4))
@@ -415,14 +463,18 @@ function stepTrigger(index) {
         .attr("stroke-dashoffset", 0);
       break;
     case 17:
-      fig1
-        .datum(hierarchyData25)
-        .call(
-          keyUnitChart
-            .lite(false)
-            .color_domain(colorValue.array("key"))
-            .color_range(colorValue.array("color"))
-        );
+      fig1.datum(hierarchyData25).call(
+        keyUnitChart
+          .margin({
+            top: 0.1,
+            right: 0.6,
+            bottom: 0.1,
+            left: 0.1,
+          })
+          .lite(false)
+          .color_domain(colorValue.array("key"))
+          .color_range(colorValue.array("color"))
+      );
       fig1.datum(articleData25).call(
         idUnitChart.margin({
           top: 0.1,
@@ -527,7 +579,7 @@ function stepTrigger(index) {
 // generic window resize listener event
 function handleResize() {
   // 1. update height of step elements
-  const stepH = Math.floor(window.innerHeight * 0.85);
+  const stepH = Math.floor(window.innerHeight * 0.7);
   steps
     .style("margin-top", stepH / 2 + "px")
     .style("margin-bottom", stepH / 2 + "px");
