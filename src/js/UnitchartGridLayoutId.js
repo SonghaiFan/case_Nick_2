@@ -39,7 +39,7 @@ export default function UnitchartGridLayoutId() {
 
       const idArray = Array.from(new Set(data.map((d) => d.id)));
 
-      bin = bin || Math.floor(Math.sqrt(idArray.length));
+      bin = Math.floor(Math.sqrt(idArray.length));
 
       const xValue = (d) => idArray.indexOf(d.id) % bin;
 
@@ -152,31 +152,22 @@ export default function UnitchartGridLayoutId() {
         );
       }
 
-      fl.selectAll("foreignObject")
-        .transition()
-        .duration(1200)
-        .style("opacity", 0)
-        .end()
-        .then(fl.selectAll("foreignObject").remove().remove());
-
       if (details) {
         const lableText = (text) =>
           text
             .replace(
-              /indigenous/gi,
+              /indigenous/i,
               '<span key="firstnations">indigenous</span>'
             )
             .replace(
-              /migrant/gi,
+              /migrant/i,
               '<span key="migrantsandrefugees">migrant</span>'
             )
-            .replace(/women/gi, '<span key="women">women</span>')
-            .replace(
-              /domestic/gi,
-              '<span key="familyrelations">domestic</span>'
-            )
-            .replace(/equality/gi, '<span key="inequality">equality</span>')
-            .replace(/violence/gi, '<span key="violence">violence</span>');
+            .replace(/women/i, '<span key="women">women</span>')
+            .replace(/domestic/i, '<span key="familyrelations">domestic</span>')
+            .replace(/familay/i, '<span key="familyrelations">domestic</span>')
+            .replace(/equality/i, '<span key="inequality">equality</span>')
+            .replace(/violence/i, '<span key="violence">violence</span>');
 
         const istd = fl
           .selectAll("foreignObject")
@@ -193,12 +184,10 @@ export default function UnitchartGridLayoutId() {
           .style("font-size", `${sizeValue / 25}px`)
           .html(
             (d) =>
-              `<strong>${d.publisher}:${lableText(
+              `<strong style=" font-size: 2em">${d.publisher}:${lableText(
                 d.heading
               )}</strong><br><br>${lableText(d.text)}`
           );
-
-        istd.select("strong").style("font-size", `${sizeValue / 15}px`);
 
         istd.selectAll("span").style("background-color", function () {
           return colorScale(d3.select(this).attr("key"));
@@ -206,12 +195,18 @@ export default function UnitchartGridLayoutId() {
 
         fl.selectAll("foreignObject")
           .transition()
-          .duration(1200)
-          .delay(1200)
+          .duration(750)
+          .delay(750)
           .style("opacity", 1);
       }
 
       if (!details) {
+        fl.selectAll("foreignObject")
+          .transition()
+          .duration(1200)
+          .style("opacity", 0)
+          .end()
+          .then(fl.selectAll("foreignObject").remove());
         const rects = fl.selectAll("rect");
 
         rects
@@ -265,11 +260,11 @@ export default function UnitchartGridLayoutId() {
     return chart;
   };
 
-  chart.bin = function (_) {
-    if (!arguments.length) return bin;
-    bin = _;
-    return chart;
-  };
+  // chart.bin = function (_) {
+  //   if (!arguments.length) return bin;
+  //   bin = _;
+  //   return chart;
+  // };
 
   chart.details = function (_) {
     if (!arguments.length) return details;

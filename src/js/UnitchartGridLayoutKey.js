@@ -11,7 +11,9 @@ export default function UnitchartGridLayoutKey() {
     color_range,
     pad = 0.1,
     bin,
-    lite = false;
+    bin2,
+    lite = false,
+    legend = false;
 
   function chart(selection) {
     selection.each(function (aqData) {
@@ -23,7 +25,8 @@ export default function UnitchartGridLayoutKey() {
       const innerWidth = width * (1 - margin.left - margin.right),
         innerHeight = height * (1 - margin.top - margin.bottom);
 
-      const fl1 = container.select(".figureLayer1");
+      const fl1 = container.select(".figureLayer1"),
+        al = container.select(".anotationLayer");
 
       fl1
         .transition()
@@ -40,7 +43,7 @@ export default function UnitchartGridLayoutKey() {
 
       // const keyArray = Array.from(new Set(data.map((d) => d.key)));
 
-      bin = bin || Math.floor(Math.sqrt(idArray.length));
+      bin = Math.floor(Math.sqrt(idArray.length));
 
       const xValue = (d) => idArray.indexOf(d.id) % bin;
 
@@ -72,7 +75,7 @@ export default function UnitchartGridLayoutKey() {
 
       const keyArray = Array.from(new Set(data2.map((d) => d[0])));
 
-      const bin2 = Math.floor(Math.sqrt(keyArray.length));
+      bin2 = Math.floor(Math.sqrt(idArray.length));
 
       const xValue2 = (d) =>
         d[groupKey]
@@ -88,18 +91,22 @@ export default function UnitchartGridLayoutKey() {
         .scaleBand()
         .domain(data.map(xValue2))
         .range([0, sizeValue])
-        .padding(0);
+        .padding(0.1);
 
       const yScale2 = d3
         .scaleBand()
         .domain(data.map(yValue2))
         .range([0, sizeValue])
-        .padding(0);
+        .padding(0.1);
 
       const colorScale = d3
         .scaleOrdinal()
         .domain(color_domain)
         .range(color_range);
+
+      const sizeValue2 = Math.min(xScale2.bandwidth(), yScale2.bandwidth());
+      const shiftValue2 =
+        Math.abs(yScale2.bandwidth() - xScale2.bandwidth()) / 2;
 
       const justedxValue2 = (d) =>
         xScale.bandwidth() > yScale.bandwidth()
@@ -113,36 +120,55 @@ export default function UnitchartGridLayoutKey() {
 
       // RENDER
 
-      // const OEg = fl1
-      //   .selectAll("g")
-      //   .data(data2, (d) => d[0])
-      //   .join("g")
-      //   .attr("class", (d) => `OEg key_${d[0]}`);
+      const keyOE = (d) =>
+        [...new Set([d.key, d.publisher, `_id${d.id}`])]
+          .sort()
+          .map((d) => d)
+          .join(" ");
 
-      const OE = fl1
-        .selectAll("rect")
-        .data(data, (d) => (d.id ? d.id + d.key : d.publisher + d.key));
+      const OE = fl1.selectAll("rect").data(data, (d) => keyOE(d));
+
+      if (legend) {
+        al.transition()
+          .duration(1200)
+          .style("opacity", 1)
+          .attr(
+            "transform",
+            `translate(${width * margin.left},${height * margin.top})`
+          );
+
+        al.selectAll("text")
+          .data(data, (d) => keyOE(d))
+          .join("text")
+          .transition()
+          .duration(1200)
+          .attr("x", (d) => justedxValue2(d))
+          .attr("y", (d) => justedyValue2(d))
+          .style("fill", "white")
+          .text((d) => d.key)
+          .attr("text-anchor", "left")
+          .attr("dy", "0.25em");
+      } else {
+        al.selectAll("text")
+          .transition()
+          .duration(1200)
+          .style("opacity", 0)
+          .end()
+          .then(al.selectAll("text").remove());
+      }
 
       if (lite) {
         OE.join(
           function (enter) {
-            let rectEner = enter
+            return enter
               .append("rect")
-              .attr("class", (d, i) => `OErect id_${d.id}`)
+              .attr("class", (d) => keyOE(d))
               .attr("x", (d) => justedxValue2(d))
               .attr("y", (d) => justedyValue2(d))
-              .attr("height", Math.min(25, yScale2.bandwidth()))
-              .attr("width", Math.min(100, xScale2.bandwidth()))
+              .attr("height", yScale2.bandwidth())
+              .attr("width", xScale2.bandwidth())
               .style("opacity", 0)
               .attr("fill", (d) => colorScale(d[groupKey]));
-
-            rectEner
-              .transition()
-              .duration(1200)
-              .delay((d) => d.id)
-              .style("opacity", 1);
-
-            return rectEner;
           },
           function (update) {
             return update
@@ -162,12 +188,12 @@ export default function UnitchartGridLayoutKey() {
           function (enter) {
             let rectEner = enter
               .append("rect")
-              .attr("class", (d, i) => `OErect id_${d.id}`)
+              .attr("class", (d) => keyOE(d))
               // .style("mix-blend-mode", "multiply")
               .attr("x", (d) => justedxValue2(d))
               .attr("y", (d) => justedyValue2(d))
-              .attr("height", Math.min(25, yScale2.bandwidth()))
-              .attr("width", Math.min(100, xScale2.bandwidth()))
+              .attr("height", yScale2.bandwidth())
+              .attr("width", xScale2.bandwidth())
               .style("opacity", 0)
               .attr("fill", (d) => colorScale(d[groupKey]));
 
@@ -187,8 +213,8 @@ export default function UnitchartGridLayoutKey() {
               .attr("x", (d) => justedxValue2(d))
               .attr("y", (d) => justedyValue2(d))
               .attr("rx", 0)
-              .attr("height", Math.min(25, yScale2.bandwidth()))
-              .attr("width", Math.min(100, xScale2.bandwidth()))
+              .attr("height", yScale2.bandwidth())
+              .attr("width", xScale2.bandwidth())
               .style("opacity", 1)
               .attr("fill", (d) => colorScale(d[groupKey]));
           },
@@ -243,11 +269,17 @@ export default function UnitchartGridLayoutKey() {
     return chart;
   };
 
-  chart.bin = function (_) {
-    if (!arguments.length) return bin;
-    bin = _;
-    return chart;
-  };
+  // chart.bin = function (_) {
+  //   if (!arguments.length) return bin;
+  //   bin = _;
+  //   return chart;
+  // };
+
+  // chart.bin2 = function (_) {
+  //   if (!arguments.length) return bin2;
+  //   bin2 = _;
+  //   return chart;
+  // };
 
   chart.legend = function (_) {
     if (!arguments.length) return legend;
