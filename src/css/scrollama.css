@@ -129,6 +129,7 @@ a:hover {
   transition: ease, 1s;
   /* border: 1px solid; */
   scroll-margin-top: 250px;
+  min-height: 250px;
 }
 
 .step:before {

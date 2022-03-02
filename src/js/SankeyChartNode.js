@@ -19,7 +19,7 @@ export default function SankeyChartNode() {
       const innerWidth = width * (1 - margin.left - margin.right),
         innerHeight = height * (1 - margin.top - margin.bottom);
 
-      const fl1 = container.select(".figureLayer1"),
+      const fl = container.select(".figureLayer"),
         fl2 = container.select(".figureLayer2");
 
       fl2
@@ -125,6 +125,30 @@ export default function SankeyChartNode() {
             exit.select("rect").transition().duration(200).attr("height", 0)
           )
       );
+
+      const node = fl2.selectAll("rect");
+
+      node
+        .on("mouseover", function (e, d) {
+          console.log(d);
+
+          const overKeyGroup = d.name;
+
+          const articleInNode = d.sourceLinks.length
+            ? d.sourceLinks
+            : d.targetLinks;
+
+          const articleIds = articleInNode.map((d) => d.id);
+
+          fl.selectAll("rect").attr("fill", (d) =>
+            articleIds.includes(d.id)
+              ? colorScale(overKeyGroup)
+              : "rgb(255, 250, 240)"
+          );
+        })
+        .on("mouseout", function (e, d) {
+          fl.selectAll("rect").attr("fill", "rgb(255, 250, 240)");
+        });
     });
   }
 

@@ -11,6 +11,7 @@ export default function UnitchartGridLayoutId() {
     pad = 0.1,
     details = true,
     bin,
+    label = true,
     lite = false;
 
   function chart(selection) {
@@ -128,7 +129,7 @@ export default function UnitchartGridLayoutId() {
           function (update) {
             const rectUpdateTransition = update
               .transition()
-              .duration(details ? 1500 : 1200)
+              .duration(details ? 2000 : 1200)
               .delay((d, i) => d.id)
               .attr("height", sizeValue)
               .attr("width", sizeValue)
@@ -154,20 +155,28 @@ export default function UnitchartGridLayoutId() {
 
       if (details) {
         const lableText = (text) =>
-          text
-            .replace(
-              /indigenous/i,
-              '<span key="firstnations">indigenous</span>'
-            )
-            .replace(
-              /migrant/i,
-              '<span key="migrantsandrefugees">migrant</span>'
-            )
-            .replace(/women/i, '<span key="women">women</span>')
-            .replace(/domestic/i, '<span key="familyrelations">domestic</span>')
-            .replace(/familay/i, '<span key="familyrelations">domestic</span>')
-            .replace(/equality/i, '<span key="inequality">equality</span>')
-            .replace(/violence/i, '<span key="violence">violence</span>');
+          label
+            ? text
+                .replace(
+                  /among indigenous communities/i,
+                  '<span key="firstnations">among indigenous communities</span>'
+                )
+                .replace(
+                  /migrant/i,
+                  '<span key="migrantsandrefugees">migrant</span>'
+                )
+                .replace(/women/i, '<span key="women">women</span>')
+                .replace(
+                  /domestic/i,
+                  '<span key="familyrelations">domestic</span>'
+                )
+                .replace(
+                  /familay/i,
+                  '<span key="familyrelations">domestic</span>'
+                )
+                .replace(/equality/i, '<span key="inequality">equality</span>')
+                .replace(/violence/i, '<span key="violence">violence</span>')
+            : text;
 
         const istd = fl
           .selectAll("foreignObject")
@@ -198,9 +207,7 @@ export default function UnitchartGridLayoutId() {
           .duration(750)
           .delay(750)
           .style("opacity", 1);
-      }
-
-      if (!details) {
+      } else {
         fl.selectAll("foreignObject")
           .transition()
           .duration(1200)
@@ -260,11 +267,11 @@ export default function UnitchartGridLayoutId() {
     return chart;
   };
 
-  // chart.bin = function (_) {
-  //   if (!arguments.length) return bin;
-  //   bin = _;
-  //   return chart;
-  // };
+  chart.label = function (_) {
+    if (!arguments.length) return label;
+    label = _;
+    return chart;
+  };
 
   chart.details = function (_) {
     if (!arguments.length) return details;

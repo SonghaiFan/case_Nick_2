@@ -11,9 +11,8 @@ export default function UnitchartGridLayoutKey() {
     color_range,
     pad = 0.1,
     bin,
-    bin2,
-    lite = false,
-    legend = false;
+    legend = false,
+    lite = false;
 
   function chart(selection) {
     selection.each(function (aqData) {
@@ -75,7 +74,7 @@ export default function UnitchartGridLayoutKey() {
 
       const keyArray = Array.from(new Set(data2.map((d) => d[0])));
 
-      bin2 = Math.floor(Math.sqrt(idArray.length));
+      const bin2 = Math.floor(Math.sqrt(keyArray.length));
 
       const xValue2 = (d) =>
         d[groupKey]
@@ -103,10 +102,6 @@ export default function UnitchartGridLayoutKey() {
         .scaleOrdinal()
         .domain(color_domain)
         .range(color_range);
-
-      const sizeValue2 = Math.min(xScale2.bandwidth(), yScale2.bandwidth());
-      const shiftValue2 =
-        Math.abs(yScale2.bandwidth() - xScale2.bandwidth()) / 2;
 
       const justedxValue2 = (d) =>
         xScale.bandwidth() > yScale.bandwidth()
@@ -143,7 +138,7 @@ export default function UnitchartGridLayoutKey() {
           .transition()
           .duration(1200)
           .attr("x", (d) => justedxValue2(d))
-          .attr("y", (d) => justedyValue2(d))
+          .attr("y", (d) => justedyValue2(d) + 20)
           .style("fill", "white")
           .text((d) => d.key)
           .attr("text-anchor", "left")
@@ -160,15 +155,23 @@ export default function UnitchartGridLayoutKey() {
       if (lite) {
         OE.join(
           function (enter) {
-            return enter
+            let rectEner = enter
               .append("rect")
-              .attr("class", (d) => keyOE(d))
+              .attr("class", (d, i) => keyOE(d))
               .attr("x", (d) => justedxValue2(d))
               .attr("y", (d) => justedyValue2(d))
               .attr("height", yScale2.bandwidth())
               .attr("width", xScale2.bandwidth())
               .style("opacity", 0)
               .attr("fill", (d) => colorScale(d[groupKey]));
+
+            rectEner
+              .transition()
+              .duration(1200)
+              .delay((d) => d.id)
+              .style("opacity", 1);
+
+            return rectEner;
           },
           function (update) {
             return update
@@ -188,7 +191,7 @@ export default function UnitchartGridLayoutKey() {
           function (enter) {
             let rectEner = enter
               .append("rect")
-              .attr("class", (d) => keyOE(d))
+              .attr("class", (d, i) => keyOE(d))
               // .style("mix-blend-mode", "multiply")
               .attr("x", (d) => justedxValue2(d))
               .attr("y", (d) => justedyValue2(d))
@@ -269,17 +272,11 @@ export default function UnitchartGridLayoutKey() {
     return chart;
   };
 
-  // chart.bin = function (_) {
-  //   if (!arguments.length) return bin;
-  //   bin = _;
-  //   return chart;
-  // };
-
-  // chart.bin2 = function (_) {
-  //   if (!arguments.length) return bin2;
-  //   bin2 = _;
-  //   return chart;
-  // };
+  chart.bin = function (_) {
+    if (!arguments.length) return bin;
+    bin = _;
+    return chart;
+  };
 
   chart.legend = function (_) {
     if (!arguments.length) return legend;
