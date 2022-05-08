@@ -36,7 +36,7 @@ export default function UnitchartGridLayoutKey() {
           `translate(${width * margin.left},${height * margin.top})`
         );
 
-      const data = aqData.orderby("id").objects();
+      const data = aqData.objects();
 
       const idArray = Array.from(new Set(data.map((d) => d.id)));
 
@@ -137,6 +137,7 @@ export default function UnitchartGridLayoutKey() {
           .join("text")
           .transition()
           .duration(1200)
+          .delay(750)
           .attr("x", (d) => justedxValue2(d))
           .attr("y", (d) => justedyValue2(d) + 20)
           .style("fill", "white")
@@ -163,7 +164,7 @@ export default function UnitchartGridLayoutKey() {
               .attr("height", yScale2.bandwidth())
               .attr("width", xScale2.bandwidth())
               .style("opacity", 0)
-              .attr("fill", (d) => colorScale(d[groupKey]));
+              .attr("fill", (d) => colorScale(d[dim_color]));
 
             rectEner
               .transition()
@@ -198,7 +199,7 @@ export default function UnitchartGridLayoutKey() {
               .attr("height", yScale2.bandwidth())
               .attr("width", xScale2.bandwidth())
               .style("opacity", 0)
-              .attr("fill", (d) => colorScale(d[groupKey]));
+              .attr("fill", (d) => colorScale(d[dim_color]));
 
             rectEner
               .transition()
@@ -219,7 +220,7 @@ export default function UnitchartGridLayoutKey() {
               .attr("height", yScale2.bandwidth())
               .attr("width", xScale2.bandwidth())
               .style("opacity", 1)
-              .attr("fill", (d) => colorScale(d[groupKey]));
+              .attr("fill", (d) => colorScale(d[dim_color]));
           },
           function (exit) {
             return exit.call((exit) =>

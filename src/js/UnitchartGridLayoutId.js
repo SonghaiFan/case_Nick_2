@@ -36,7 +36,7 @@ export default function UnitchartGridLayoutId() {
           `translate(${width * margin.left},${height * margin.top})`
         );
 
-      const data = aqData.orderby("id").objects();
+      const data = aqData.objects();
 
       const idArray = Array.from(new Set(data.map((d) => d.id)));
 
@@ -205,7 +205,7 @@ export default function UnitchartGridLayoutId() {
         fl.selectAll("foreignObject")
           .transition()
           .duration(750)
-          .delay(750)
+          .delay(1500)
           .style("opacity", 1);
       } else {
         fl.selectAll("foreignObject")
@@ -237,7 +237,7 @@ export default function UnitchartGridLayoutId() {
             let stroke_width = d3.select(this).attr("stroke-width");
             d3.select(this)
               // .attr("stroke", stroke_status == "white" ? "red" : "white")
-              .attr("stroke-width", stroke_width == 1 ? 3 : 1);
+              .attr("stroke-width", stroke_width == 1 ? 8 : 1);
           });
       }
     });

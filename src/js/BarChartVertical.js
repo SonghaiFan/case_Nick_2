@@ -130,7 +130,7 @@ export default function BarChartVertical() {
               .data([null])
               .join("text")
               .attr("x", 200)
-              .attr("y", 75)
+              .attr("y", 0)
               .style("fill", "white")
               .text(
                 (d) =>

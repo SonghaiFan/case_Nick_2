@@ -12,6 +12,7 @@ export default function BarChartHorizontal() {
     measure_y,
     x_domain,
     color_domain,
+    color_range,
     y_domain,
     pad = 0.4,
     smooth = true;
@@ -78,8 +79,8 @@ export default function BarChartHorizontal() {
 
       const colorScale = d3
         .scaleOrdinal()
-        .domain(aqDataU.array("dim_color"))
-        .range(["rgb(252, 219, 57)", "rgb(3, 185, 118)", "rgb(250, 195, 211)"]);
+        .domain(color_domain)
+        .range(color_range);
 
       xl.transition()
         .duration(750)
@@ -140,8 +141,8 @@ export default function BarChartHorizontal() {
             .delay((d, i) => d.id)
             .style("opacity", 0.2)
             .attr("width", size)
-            .attr("height", size)
-            .attr("rx", (d) => size);
+            .attr("height", size);
+          // .attr("rx", (d) => size);
 
           return rectEnterTransition;
         },
@@ -160,8 +161,8 @@ export default function BarChartHorizontal() {
               (d, i) =>
                 xValue(d) + size / 2 + (i / data.length) * xScale.bandwidth()
             )
-            .attr("y", (d) => yValue(d) - size / 2)
-            .attr("rx", (d) => size);
+            .attr("y", (d) => yValue(d) - size / 2);
+          // .attr("rx", (d) => size);
 
           return rectUpdateTransition;
         },
@@ -224,6 +225,12 @@ export default function BarChartHorizontal() {
   chart.color_domain = function (_) {
     if (!arguments.length) return color_domain;
     color_domain = _;
+    return chart;
+  };
+
+  chart.color_range = function (_) {
+    if (!arguments.length) return color_range;
+    color_range = _;
     return chart;
   };
 

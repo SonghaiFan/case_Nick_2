@@ -30,6 +30,8 @@ export default function SankeyChartLink() {
         fl4 = container.select(".figureLayer4"),
         al = container.select(".anotationLayer");
 
+      const tooltip = d3.select("#tooltipContainer");
+
       fl3
         .transition()
         .duration(1200)
@@ -139,7 +141,7 @@ export default function SankeyChartLink() {
             .data([null])
             .join("text")
             .attr("x", 850)
-            .attr("y", 75)
+            .attr("y", 0)
             .style("fill", "white")
             .text(
               (d) =>
@@ -215,7 +217,7 @@ export default function SankeyChartLink() {
           );
 
           fl.selectAll("rect").attr("stroke-width", (d) =>
-            d.id == overedRectId ? 5 : 1
+            d.id == overedRectId ? 10 : 1
           );
         })
         .on("mouseout", function (e, d) {
@@ -223,6 +225,35 @@ export default function SankeyChartLink() {
           fl.selectAll("rect")
             .attr("fill", "rgb(255, 250, 240)")
             .attr("stroke-width", 1);
+        });
+
+      const rects = fl.selectAll("rect");
+
+      rects
+        .on("mouseover", function (e, d) {
+          rects.attr("fill", "black");
+          let overedRect = d3.select(this);
+          overedRect.attr("fill", "white");
+          let overedId = overedRect.data()[0].id;
+          d3.selectAll(`.linkGroup.article${overedId}`)
+            .attr("stroke", "white")
+            .attr("stroke-width", (d) => Math.max(5, d.width))
+            .raise();
+          tooltip
+            .style("display", "block")
+            .html(() => `${d.publisher}<br><b>${d.heading}</b>`);
+        })
+        .on("mouseout", function () {
+          tooltip.style("display", "none");
+          rects.attr("fill", "rgb(255, 250, 240)");
+          d3.selectAll(".linkGroup")
+            .attr("stroke", "gray")
+            .attr("stroke-width", (d) => Math.max(1, d.width));
+        })
+        .on("mousemove", (e, d) => {
+          tooltip
+            .style("left", d3.pointer(e)[0] + "px")
+            .style("top", d3.pointer(e)[1] + "px");
         });
     });
   }

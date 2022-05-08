@@ -11,7 +11,7 @@ export default function BarChartHorizontalKey() {
     dim,
     measure_y,
     x_domain,
-    color_domain,
+    color_range,
     y_domain,
     pad = 0.4,
     smooth = true,
@@ -110,7 +110,7 @@ export default function BarChartHorizontalKey() {
       const colorScale = d3
         .scaleOrdinal()
         .domain(aqDataS.array("dim_color"))
-        .range(["rgb(252, 219, 57)", "rgb(3, 185, 118)", "rgb(250, 195, 211)"]);
+        .range(color_range);
 
       xl.transition()
         .duration(1200)
@@ -307,9 +307,9 @@ export default function BarChartHorizontalKey() {
     return chart;
   };
 
-  chart.color_domain = function (_) {
-    if (!arguments.length) return color_domain;
-    color_domain = _;
+  chart.color_range = function (_) {
+    if (!arguments.length) return color_range;
+    color_range = _;
     return chart;
   };
 

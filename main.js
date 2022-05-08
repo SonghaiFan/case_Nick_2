@@ -52,6 +52,7 @@ const colorValue = hierarchyData
 // const UnitGridLayout = GridLayout();
 
 const keyUnitChart = UnitchartGridLayoutKey()
+  .dim_color("key")
   .color_domain(colorValue.array("key"))
   .color_range(colorValue.array("color"));
 
@@ -90,11 +91,11 @@ const dumyData = aq.table({
 function stepTrigger(index) {
   switch (index) {
     case 0:
-      article.style("margin-left", "10%");
+      article.style("margin-left", "5%");
       fig1.datum(articleData.filter((d) => false)).call(idUnitChart);
       break;
     case 1:
-      article.style("margin-left", "10%");
+      article.style("margin-left", "5%");
       fig1
         .datum(articleData.slice(0, 1))
         .call(idUnitChart.details(true).label(false));
@@ -111,14 +112,14 @@ function stepTrigger(index) {
       fig1.datum(articleData).call(idUnitChart.details(false).label(false));
       break;
     case 5:
-      article.style("margin-left", "10%");
+      article.style("margin-left", "5%");
       fig1.datum(hierarchyData.filter((d) => false)).call(
         keyUnitChart
           .margin({
             top: 0.3,
             right: 0,
             bottom: 0.3,
-            left: 0.5,
+            left: 0.6,
           })
           .legend(true)
       );
@@ -149,7 +150,7 @@ function stepTrigger(index) {
               top: 0.3,
               right: 0,
               bottom: 0.3,
-              left: 0.5,
+              left: 0.6,
             })
             .legend(true)
         );
@@ -159,7 +160,7 @@ function stepTrigger(index) {
         .select(".in_svg_text_div")
         .transition()
         .duration(750)
-        .style("transform", "translateY(-553px)");
+        .style("transform", "translateY(-500px)");
       fig1
         .datum(
           hierarchyData
@@ -178,7 +179,7 @@ function stepTrigger(index) {
         .select(".in_svg_text_div")
         .transition()
         .duration(750)
-        .style("transform", "translateY(-1156px)");
+        .style("transform", "translateY(-980px)");
       fig1
         .datum(
           hierarchyData
@@ -197,7 +198,7 @@ function stepTrigger(index) {
               top: 0.3,
               right: 0,
               bottom: 0.3,
-              left: 0.5,
+              left: 0.6,
             })
             .legend(true)
         );
@@ -207,14 +208,14 @@ function stepTrigger(index) {
         .select(".in_svg_text_div")
         .transition()
         .duration(750)
-        .style("transform", "translateY(-1870px)");
+        .style("transform", "translateY(-1588px)");
       fig1.datum(hierarchyData.filter((d) => d.id == 1)).call(
         keyUnitChart
           .margin({
             top: 0.3,
             right: 0,
             bottom: 0.3,
-            left: 0.5,
+            left: 0.6,
           })
           .legend(true)
       );
@@ -255,7 +256,7 @@ function stepTrigger(index) {
           })
           .details(false)
       );
-      article.style("margin-left", "10%");
+      article.style("margin-left", "5%");
       break;
     case 12:
       article.style("margin-left", "calc(50% - 35rem/2)");
@@ -581,6 +582,7 @@ function stepTrigger(index) {
             left: 0.1,
           })
           .lite(false)
+          .dim_color("key")
           .color_domain(colorValue.array("key"))
           .color_range(colorValue.array("color"))
       );
@@ -609,42 +611,57 @@ function stepTrigger(index) {
       fig1.select(".figureLayer4").selectAll("*").remove();
       fig1.select(".xAxisLayer").selectAll("*").remove();
       fig1.select(".yAxisLayer").selectAll("*").remove();
-      fig1.datum(characteristicsData.dedupe("id")).call(
+      fig1.datum(characteristicsData.orderby("publisher").dedupe("id")).call(
         idUnitChart
           .margin({
             top: 0.1,
-            right: 0,
+            right: 0.6,
             bottom: 0.1,
-            left: 0,
+            left: 0.1,
           })
           .lite(false)
       );
-      fig1.datum(characteristicsData).call(
+      fig1.datum(characteristicsData.orderby("publisher")).call(
         keyUnitChart
           .margin({
             top: 0.1,
-            right: 0,
+            right: 0.6,
             bottom: 0.1,
-            left: 0,
+            left: 0.1,
           })
-          .color_domain(characteristicsData.array("key"))
-          .color_range(["rgb(255, 250, 240)"])
+          .dim_color("publisher")
+          .color_domain(characteristicsData.array("publisher"))
+          .color_range([
+            "rgb(252, 219, 57)",
+            "rgb(3, 185, 118)",
+            "rgb(250, 195, 211)",
+          ])
           .lite(false)
       );
       article.style("margin-left", "calc(50% - 35rem/2)");
       break;
     case 26:
-      fig1.select(".figureLayer").selectAll("*").remove();
-      fig1
-        .datum(characteristicsData)
-        .call(
-          aBarChartHorizontal
-            .dim_x("publisher")
-            .dim_color("publisher")
-            .dim("key")
-            .measure_y("value")
-            .smooth(true)
-        );
+      // fig1.select(".figureLayer").selectAll("*").remove();
+      fig1.datum(characteristicsData).call(
+        aBarChartHorizontal
+          .margin({
+            top: 0.1,
+            right: 0.1,
+            bottom: 0.1,
+            left: 0.45,
+          })
+          .dim_x("publisher")
+          .dim_color("publisher")
+          .dim("key")
+          .measure_y("value")
+          .color_domain(characteristicsData.array("publisher"))
+          .color_range([
+            "rgb(252, 219, 57)",
+            "rgb(3, 185, 118)",
+            "rgb(250, 195, 211)",
+          ])
+          .smooth(true)
+      );
       break;
     case 27:
       fig1
@@ -659,16 +676,21 @@ function stepTrigger(index) {
         );
       break;
     case 28:
-      fig1
-        .datum(characteristicsDataAgg)
-        .call(
-          aBarChartHorizontalKey
-            .dim_x("key")
-            .dim_color("publisher")
-            .measure_y("value")
-            .smooth(true)
-            .stack(true)
-        );
+      fig1.datum(characteristicsDataAgg).call(
+        aBarChartHorizontalKey
+          .margin({
+            top: 0.1,
+            right: 0.1,
+            bottom: 0.1,
+            left: 0.45,
+          })
+          .dim_x("key")
+          .dim_color("publisher")
+          .measure_y("value")
+          // .color_range(["rgb(255, 250, 240)"])
+          .smooth(true)
+          .stack(true)
+      );
       break;
     case 29:
       fig1
@@ -677,10 +699,25 @@ function stepTrigger(index) {
           aBarChartHorizontalKey
             .dim_x("key")
             .dim_color("publisher")
+            .color_range([
+              "rgb(252, 219, 57)",
+              "rgb(3, 185, 118)",
+              "rgb(250, 195, 211)",
+            ])
             .measure_y("value")
             .smooth(true)
             .stack(false)
         );
+      break;
+    case 30:
+      fig1.select(".figureLayer1").selectAll("rect").style("opacity", 0.2);
+
+      fig1.select(".figureLayer1").selectAll(".Fairfax").style("opacity", 1);
+      break;
+    case 31:
+      fig1.select(".figureLayer1").selectAll("rect").style("opacity", 0.2);
+
+      fig1.select(".figureLayer1").selectAll(".News").style("opacity", 1);
       break;
   }
 }
@@ -781,7 +818,7 @@ function init() {
 
   scroller.setup({
     step: ":is(.chapter,.step)",
-    offset: 0.5,
+    offset: 0.6,
     debug: false,
   });
 
